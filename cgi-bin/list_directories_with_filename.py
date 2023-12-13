@@ -9,8 +9,8 @@ if cwd.endswith('cgi-bin'):
 
 
 cgitb.enable()  # for troubleshooting
-print "Content-Type: text/html"
-print 
+print("Content-Type: text/html")
+print() 
 
 
 data = cgi.FieldStorage()
@@ -20,4 +20,4 @@ out = []
 for f in os.listdir(path):
 	if os.path.exists(path+'/'+f+'/'+filename):
 		out.append(f)
-print ','.join(sorted(out,key=lambda x: x.lower()))
+print(','.join(sorted(out,key=lambda x: x.lower())))

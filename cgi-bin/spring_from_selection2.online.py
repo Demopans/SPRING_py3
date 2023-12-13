@@ -2,12 +2,12 @@
 import cgi
 import cgitb
 cgitb.enable()  # for troubleshooting
-print "Content-Type: text/html"
+print("Content-Type: text/html")
 import os
 import pickle
 import numpy as np
 import subprocess
-print ''
+print('')
 
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
@@ -127,7 +127,7 @@ except:
 
 try:
 	project_filter = data.getvalue('compared_cells')
-	project_filter = np.sort(np.array(map(int,project_filter.split(','))))
+	project_filter = np.sort(np.array(list(map(int,project_filter.split(',')))))
 except:
 	project_filter = np.array([])
 
@@ -141,9 +141,9 @@ except:
 
 if not do_the_rest:
 	#os.rmdir(new_dir)
-	print 'Invalid input!<br>'
+	print('Invalid input!<br>')
 	for err in all_errors:
-		print '>  %s' %err
+		print('>  %s' %err)
 
 else:
 
@@ -153,7 +153,7 @@ else:
 			shutil.rmtree(new_dir)
 		os.makedirs(new_dir)
 
-		base_filter = np.sort(np.array(map(int,base_filter.split(','))))
+		base_filter = np.sort(np.array(list(map(int,base_filter.split(',')))))
 		extra_filter = np.array(np.sort(np.hstack((base_filter,project_filter))),dtype=int)
 		base_ix = np.nonzero([(i in base_filter) for i in extra_filter])[0]
 
@@ -183,9 +183,9 @@ else:
 		pickle.dump(params_dict, params_file, -1)
 		params_file.close()
 
-		print 'Everything looks good. Now running...<br>'
-		print 'This could take several minutes.<br>'
-		if user_email != '': print 'You will be notified of completion by email.<br>'
+		print('Everything looks good. Now running...<br>')
+		print('This could take several minutes.<br>')
+		if user_email != '': print('You will be notified of completion by email.<br>')
 
 		o = open(new_dir + '/lognewspring2.txt', 'w')
 		o.write('Started processing<br>\n')
@@ -194,5 +194,5 @@ else:
 		subprocess.call(["cgi-bin/new_spring_submit.sh", new_dir])
 
 	except:
-		print 'Error starting processing!<br>'
+		print('Error starting processing!<br>')
 

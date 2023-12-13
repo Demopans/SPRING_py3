@@ -25,5 +25,5 @@ if 'clustering_data' in filepath:
 	os.system('cp '+filepath+' '+filepath.replace('_clustmp',''))
 	os.system('rm -f '+filepath)
 
-print "Content-Type: text/html\n"
-print 'sucess'
+print("Content-Type: text/html\n")
+print('sucess')

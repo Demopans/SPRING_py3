@@ -5,7 +5,7 @@ import cgitb
 import os
 import json
 cgitb.enable()  # for troubleshooting
-print "Content-Type: text/plain\n"
+print("Content-Type: text/plain\n")
 
 #========================================================================================#
 
@@ -116,7 +116,7 @@ def calculate_doublet_scores(embedding, doub_labels, k=50, use_approx_nn=True, e
     neighbors = neighbors - n_obs
     if get_doub_parents and parent_ix is not None:
         neighbor_parents = []
-        for iCell in xrange(n_obs):
+        for iCell in range(n_obs):
             this_doub_neigh = neighbors[iCell,:][neighbors[iCell,:] > -1]
             if len(this_doub_neigh) > 0:
                 this_doub_neigh_parents = np.unique(parent_ix[this_doub_neigh,:].flatten())
@@ -135,7 +135,7 @@ def woublet(E=None, exp_doub_rate = 0.1, sim_doublet_ratio=3, k=50, use_approx_n
     
     # Check that input is valid
     if E is None and precomputed_pca is None:
-        print 'Please supply a counts matrix (E) or PCA coordinates (precomputed_pca)'
+        print('Please supply a counts matrix (E) or PCA coordinates (precomputed_pca)')
         return
     
     # Convert counts matrix to sparse format if necessary
@@ -195,7 +195,7 @@ if os.path.exists(sub_dir + '/intermediates.npz'):
         total_counts = None
     del tmp
 else:
-    print 'Error: could not find "intermediates.npz"'
+    print('Error: could not find "intermediates.npz"')
 
 doublet_scores, doublet_scores_sim, doub_neigh_parents = woublet(precomputed_pca = Epca, total_counts = total_counts, exp_doub_rate = f, sim_doublet_ratio = r, k = k, use_approx_nn = True, get_doub_parents = True)
 np.save(sub_dir + '/doublet_scores.npy', doublet_scores)

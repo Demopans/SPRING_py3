@@ -12,7 +12,7 @@ if cwd.endswith('cgi-bin'):
 
 def check_same(d1,d2):
 	out = True
-	for k,v in d1.items():
+	for k,v in list(d1.items()):
 		if not k in d2 or d2[k] != v: out = False
 	return out
 
@@ -31,5 +31,5 @@ if os.path.exists(filepath):
 
 open(filepath,'w').write(content)
 
-print "Content-Type: text/html\n"
-print 'sucess'
+print("Content-Type: text/html\n")
+print('sucess')

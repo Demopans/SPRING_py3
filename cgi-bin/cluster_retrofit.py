@@ -43,13 +43,13 @@ def frac_to_hex(frac):
 t = time.time()
 
 project_directory = 'client_datasets/'+ sys.argv[1]
-print 'start',project_directory 
+print('start',project_directory) 
 
 clustering = {}
 graph_path = project_directory + '/graph_data.json'
-print graph_path
+print(graph_path)
 if os.path.exists(graph_path):
-	print 'doing'
+	print('doing')
 	graph = json.load(open(graph_path))
 	node_numbers = [n['number'] for n in graph['nodes']]
 	node_index = {nn:i for i,nn in enumerate(node_numbers)}
@@ -59,7 +59,7 @@ if os.path.exists(graph_path):
 		j = node_index[l['target']]
 		A[i,j] = 1
 		A[j,i] = 1
-	print project_directory,'Spectral start'
+	print(project_directory,'Spectral start')
 	ww,vv = spectral_coords(A,A.shape[0]/2)
 	ww = np.real(ww)
 	spectral_gaps = list((np.roll(ww,-1)-ww))[:-1]
@@ -76,18 +76,18 @@ if os.path.exists(graph_path):
 		falling = spectral_gaps[first_peak+1] - spectral_gaps[first_peak] < 0
 	first_peak += 1
 	if has_risen == False: first_peak = 1
-	print 'FP',first_peak	
+	print('FP',first_peak)	
 		
 	
 	X = row_norm_normalize(vv)
 	for k in range(1,np.min([A.shape[0]/4,100])):
-		print project_directory,'Cluster',k
+		print(project_directory,'Cluster',k)
 		km = sklearn.cluster.KMeans(n_clusters=k)
 		clus = km.fit_predict(X[:,:k])
 		clustering['Cluster'+repr(k)] = [repr(x+1) for x in clus]
 
 	clus_colored = {}
-	for k,labels in clustering.items():
+	for k,labels in list(clustering.items()):
 		label_colors = {l:frac_to_hex(float(i)/len(set(labels))) for i,l in enumerate(list(set(labels)))}
 		clus_colored[k] = {'label_colors':label_colors, 'label_list':labels}
 	data = {'Current_clustering':'Cluster'+repr(first_peak),
@@ -95,7 +95,7 @@ if os.path.exists(graph_path):
 	        'spectral_info':{'gaps':spectral_gaps, 'argmax':first_peak}}
 	json.dump(data,open('clustering_data/' + sys.argv[1] + '_clustering_data.json','w'),indent=4)
 
-print 'TOTAL TIME',time.time() - t
+print('TOTAL TIME',time.time() - t)
 #	xx,yy = load_coords('.')
 #	plt.scatter(xx,yy,c=clus,edgecolor='')
 #	plt.show()

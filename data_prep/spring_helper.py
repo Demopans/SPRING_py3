@@ -129,7 +129,7 @@ def load_text(file_data,delim='\t', load_cell_bcs=False):
                     tmp = float(dat[current_col])
                     
                     try:
-                        rowdat = np.array(map(float, dat[current_col:]))
+                        rowdat = np.array(list(map(float, dat[current_col:])))
                         ncol = len(rowdat)
                         col_ix = np.nonzero(rowdat)[0]
 
@@ -149,7 +149,7 @@ def load_text(file_data,delim='\t', load_cell_bcs=False):
         else:
             try:
                 if load_cell_bcs: cell_bcs.append(dat[0])
-                rowdat = np.array(map(float, dat[start_column:]))
+                rowdat = np.array(list(map(float, dat[start_column:])))
                 if len(rowdat) != ncol:
                     return 'ERROR: Rows have different numbers of numeric columns.'
                 col_ix = np.nonzero(rowdat)[0]
@@ -176,7 +176,7 @@ def text_to_sparse(file_data,delim='\t',start_row=0,start_column=0,data_type=flo
     for row_ix, dat in enumerate(file_data):
         dat = dat.strip('\n').split(delim)
         if row_ix >= start_row:
-            rowdat = np.array(map(data_type, dat[start_column:]))
+            rowdat = np.array(list(map(data_type, dat[start_column:])))
             col_ix = np.nonzero(rowdat)[0]
             X_col.extend(col_ix)
             X_row.extend([row_ix - start_row] * len(col_ix))
@@ -191,7 +191,7 @@ def text_to_sparse(file_data,delim='\t',start_row=0,start_column=0,data_type=flo
 
 ########## CELL FILTERING
 def filter_dict(d, filt):
-    for k,v in d.items():
+    for k,v in list(d.items()):
         if k != 'meta':
             if len(v.shape) == 1:
                 d[k] = v[filt]
@@ -439,12 +439,12 @@ def get_knn_graph(X, k=5, dist_metric='euclidean', approx=False, return_edges=Tr
         ncell = X.shape[0]
         annoy_index = AnnoyIndex(npc, metric=dist_metric)
 
-        for i in xrange(ncell):
+        for i in range(ncell):
             annoy_index.add_item(i, list(X[i,:]))
         annoy_index.build(10) # 10 trees
 
         knn = []
-        for iCell in xrange(ncell):
+        for iCell in range(ncell):
             knn.append(annoy_index.get_nns_by_item(iCell, k + 1)[1:])
         knn = np.array(knn, dtype=int)
 
@@ -494,7 +494,7 @@ def get_louvain_clusters(nodes, edges):
     G.add_nodes_from(nodes)
     G.add_edges_from(edges)
     
-    return np.array(community.best_partition(G).values())
+    return np.array(list(community.best_partition(G).values()))
 
 
 ########## EMBEDDING
@@ -504,7 +504,7 @@ def get_force_layout(links, n_cells, n_iter=100, edgeWeightInfluence=1, barnesHu
     import networkx as nx
 
     G = nx.Graph()
-    G.add_nodes_from(range(n_cells))
+    G.add_nodes_from(list(range(n_cells)))
     G.add_edges_from(list(links))
 
     forceatlas2 = ForceAtlas2(
@@ -596,7 +596,7 @@ def write_edges(filename, edges):
 
 def write_color_tracks(ctracks, fname):
     out = []
-    for name,score in ctracks.items():
+    for name,score in list(ctracks.items()):
         line = name + ',' + ','.join(['%.3f' %x for x in score])
         out += [line]
     out = sorted(out,key=lambda x: x.split(',')[0])
@@ -625,7 +625,7 @@ def get_color_stats_genes(color_stats, E, gene_list):
     return color_stats
 
 def get_color_stats_custom(color_stats, custom_colors):
-    for k,v in custom_colors.items():
+    for k,v in list(custom_colors.items()):
         color_stats[k] = (np.mean(v),np.std(v),np.min(v),np.max(v),np.percentile(v,99))
     return color_stats
 
@@ -634,7 +634,7 @@ def save_color_stats(filename, color_stats):
         f.write(json.dumps(color_stats,indent=4, sort_keys=True).decode('utf-8'))
 
 def build_categ_colors(categorical_coloring_data, cell_groupings):
-    for k,labels in cell_groupings.items():
+    for k,labels in list(cell_groupings.items()):
         label_colors = {l:frac_to_hex(float(i)/len(set(labels))) for i,l in enumerate(list(set(labels)))}
         categorical_coloring_data[k] = {'label_colors':label_colors, 'label_list':labels}
     return categorical_coloring_data
@@ -715,7 +715,7 @@ def make_spring_subplot(E, gene_list, save_path, base_ix = None, normalize = Tru
 
 
             if len(gene_filter) == 0:
-                print 'Error: No genes passed filter'
+                print('Error: No genes passed filter')
                 sys.exit(2)
                 #print 'Error: All genes have mean expression < '+repr(min_exp) + ' or CV < '+repr(min_cv)
             #print 'Using %i genes' %(len(gene_filter))
@@ -723,7 +723,7 @@ def make_spring_subplot(E, gene_list, save_path, base_ix = None, normalize = Tru
             if not exclude_corr_genes_list is None:
                 gene_filter = remove_corr_genes(E, gene_list, exclude_corr_genes_list, gene_filter, min_corr = exclude_corr_genes_minCorr)
                 if len(gene_filter) == 0:
-                    print 'Error: No genes passed filter'
+                    print('Error: No genes passed filter')
                     sys.exit(2)
 
             # Remove user-excluded genes from consideration
@@ -732,7 +732,7 @@ def make_spring_subplot(E, gene_list, save_path, base_ix = None, normalize = Tru
                 #print 'Excluded %i user-provided genes' %(len(gene_filter)-len(keep_ix))
                 gene_filter = gene_filter[keep_ix]
                 if len(gene_filter) == 0:
-                    print 'Error: No genes passed filter'
+                    print('Error: No genes passed filter')
                     sys.exit(2)
 
         out['gene_filter'] = gene_filter
@@ -927,8 +927,8 @@ def plot_groups(x, y, groups, lim_buffer = 50, saving = False, fig_dir = './', f
 
 def rank_enriched_genes(E, gene_list, cell_mask, min_counts=3, min_cells=3):
     gix = (E[cell_mask,:]>=min_counts).sum(0).A.squeeze() >= min_cells
-    print '%i cells in group' %(sum(cell_mask))
-    print 'Considering %i genes' %(sum(gix))
+    print('%i cells in group' %(sum(cell_mask)))
+    print('Considering %i genes' %(sum(gix)))
     
     gene_list = gene_list[gix]
     

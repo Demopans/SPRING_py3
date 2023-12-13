@@ -5,7 +5,7 @@ import cgitb
 import os
 import json
 cgitb.enable()  # for troubleshooting
-print "Content-Type: text/plain\n"
+print("Content-Type: text/plain\n")
 
 #========================================================================================#
 
@@ -25,7 +25,7 @@ def get_louvain_clusters(nodes, edges):
     G.add_nodes_from(nodes)
     G.add_edges_from(edges)
     
-    return np.array(community.best_partition(G).values())
+    return np.array(list(community.best_partition(G).values()))
 
 def load_edges(fname):
     edges = set([])
@@ -35,7 +35,7 @@ def load_edges(fname):
     return edges
 
 def build_categ_colors(categorical_coloring_data, cell_groupings):
-    for k,labels in cell_groupings.items():
+    for k,labels in list(cell_groupings.items()):
         label_colors = {l:frac_to_hex(float(i)/len(set(labels))) for i,l in enumerate(list(set(labels)))}
         categorical_coloring_data[k] = {'label_colors':label_colors, 'label_list':labels}
     return categorical_coloring_data
@@ -60,7 +60,7 @@ base_dir = data.getvalue('base_dir')
 sub_dir = data.getvalue('sub_dir')
 
 cell_filter = np.load(sub_dir + '/cell_filter.npy')
-nodes = range(len(cell_filter))
+nodes = list(range(len(cell_filter)))
 edges = load_edges(sub_dir + '/edges.csv')
 
 clusts = get_louvain_clusters(nodes, edges)
@@ -69,7 +69,7 @@ np.save(sub_dir + '/louvain_clusters.npy', clusts)
 
 
 old_cell_groupings = json.load(open(sub_dir + '/categorical_coloring_data.json'))
-new_cell_groupings = build_categ_colors(old_cell_groupings, {'Louvain cluster': map(str,clusts)})
+new_cell_groupings = build_categ_colors(old_cell_groupings, {'Louvain cluster': list(map(str,clusts))})
 save_cell_groupings(sub_dir + '/categorical_coloring_data.json', new_cell_groupings)
 
 

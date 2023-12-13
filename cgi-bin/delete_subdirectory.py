@@ -9,8 +9,8 @@ if cwd.endswith('cgi-bin'):
 
 
 cgitb.enable()  # for troubleshooting
-print "Content-Type: text/html"
-print 
+print("Content-Type: text/html")
+print() 
 
 
 form = cgi.FieldStorage()

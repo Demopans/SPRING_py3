@@ -172,13 +172,13 @@ custom_colors = {}
 f = open(current_dir + '/color_data_gene_sets.csv', 'r')
 for l in f:
     cols = l.strip('\n').split(',')
-    custom_colors[cols[0]] = map(float, np.array(cols[1:])[extra_filter])
-for k,v in custom_colors.items():
+    custom_colors[cols[0]] = list(map(float, np.array(cols[1:])[extra_filter]))
+for k,v in list(custom_colors.items()):
     color_stats[k] = (0,1,np.min(v),np.max(v)+.01,np.percentile(v,99))
 with open(new_dir+'/color_stats.json','w') as f:
     f.write(json.dumps(color_stats,indent=4, sort_keys=True).decode('utf-8'))
 with open(new_dir+'/color_data_gene_sets.csv','w') as f:
-    for k,v in custom_colors.items():
+    for k,v in list(custom_colors.items()):
         f.write(k + ',' + ','.join(map(str, v)) + '\n')
 t1 = time.time()
 update_log(timef, 'Saved color stats -- %.2f' %(t1-t0))
@@ -254,7 +254,7 @@ update_log(timef, 'Graph data saved -- %.2f' %(t1-t0))
 t0 = time.time()
 update_log_html(logf, 'Getting force layout...')
 G = nx.Graph()
-G.add_nodes_from(range(E.shape[0]))
+G.add_nodes_from(list(range(E.shape[0])))
 G.add_edges_from(links)
 
 forceatlas2 = ForceAtlas2(
@@ -308,7 +308,7 @@ if os.path.exists(current_dir + '/clone_map.json'):
     clone_map = json.load(open(current_dir + '/clone_map.json'))
     extra_filter_map = {i:j for j,i in enumerate(extra_filter)}
     new_clone_map = {}
-    for i,clone in clone_map.items():
+    for i,clone in list(clone_map.items()):
         i = int(i)
         new_clone = [extra_filter_map[j] for j in clone if j in extra_filter_map]
         if i in extra_filter_map and len(new_clone) > 0:

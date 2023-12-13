@@ -2,8 +2,8 @@
 import cgi
 import cgitb
 cgitb.enable()  # for troubleshooting
-print "Content-Type: text/html"
-print
+print("Content-Type: text/html")
+print()
 
 import os
 import pickle
@@ -59,14 +59,14 @@ except:
 
 if not do_the_rest:
 	#os.rmdir(new_dir)
-	print 'Invalid input!<br>'
+	print('Invalid input!<br>')
 	for err in all_errors:
-		print '>  %s' %err
+		print('>  %s' %err)
 else:
     try:
 
         rand_suffix = ''.join(str(time.time()).split('.'))
-        extra_filter = np.sort(np.array(map(int,extra_filter.split(','))))
+        extra_filter = np.sort(np.array(list(map(int,extra_filter.split(',')))))
 
 
         params_dict = {}
@@ -85,11 +85,11 @@ else:
         pickle.dump(params_dict, params_file, -1)
         params_file.close()
 
-        print 'Preparing data...<br>'
-        print 'This may take several minutes.<br>'
-        print 'You will be notified of completion by email.<br>'
-        print '<br>Feel free to close this window.<br>'
+        print('Preparing data...<br>')
+        print('This may take several minutes.<br>')
+        print('You will be notified of completion by email.<br>')
+        print('<br>Feel free to close this window.<br>')
 
         subprocess.call(["cgi-bin/download_expression.submit.sh", params_filename])
     except:
-        print 'Error starting processing!<br>'
+        print('Error starting processing!<br>')

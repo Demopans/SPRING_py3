@@ -3,8 +3,8 @@
 import cgi
 import cgitb
 cgitb.enable()  # for troubleshooting
-print "Content-Type: text/html"
-print
+print("Content-Type: text/html")
+print()
 
 import os
 import pickle
@@ -127,9 +127,9 @@ except:
 
 if not do_the_rest:
     #os.rmdir(new_dir)
-    print 'Invalid input!<br>'
+    print('Invalid input!<br>')
     for err in all_errors:
-        print '>  %s' %err
+        print('>  %s' %err)
 
 else:
     try:
@@ -172,9 +172,9 @@ else:
         pickle.dump(params_dict, params_file, -1)
         params_file.close()
 
-        print 'Everything looks good. Now running...<br>'
-        print 'This could take a minute or two. Feel free to exit.<br>'
-        print 'You\'ll receive an email when your dataset is ready.<br>'
+        print('Everything looks good. Now running...<br>')
+        print('This could take a minute or two. Feel free to exit.<br>')
+        print('You\'ll receive an email when your dataset is ready.<br>')
 
         o = open(new_dir + '/lognewspring2.txt', 'w')
         o.write('Started processing<br>\n')
@@ -183,5 +183,5 @@ else:
         subprocess.call(["cgi-bin/new_spring_submit.sh", new_dir])
         
     except:
-        print 'Error starting processing!<br>'
+        print('Error starting processing!<br>')
 

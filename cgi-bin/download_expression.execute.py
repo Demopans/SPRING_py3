@@ -99,17 +99,17 @@ if not ssp.isspmatrix_csc(E):
     E = E.tocsc()
 t1 = time.time()
 # update_log(timef, 'Counts loaded from npz -- %.2f' %(t1-t0), True)
-print E.shape
-print gene_list.shape
+print(E.shape)
+print(gene_list.shape)
 
 E = E.T
 
-print E.shape
+print(E.shape)
 
 
 #################
 # Save expression matrix as csv
-print 'Saving expression'
+print('Saving expression')
 o = open(outdir + 'expr.csv', 'w')
 t0 = time.time()
 for iG, g in enumerate(gene_list):
@@ -125,17 +125,17 @@ os.system('gzip "' + outdir + 'expr.csv"')
 
 
 # save coordinates
-print 'Saving coordinates'
+print('Saving coordinates')
 coords = np.loadtxt(current_dir + '/coordinates.txt', delimiter = ',', comments="")[:,1:]
 coords = coords[extra_filter,:]
 np.savetxt(outdir + 'coordinates.csv', np.hstack((np.arange(coords.shape[0])[:,None], coords)), fmt="%i,%.5f,%.5f")
 
 # save original cell indices of selected cells
-print 'Saving cell indices'
+print('Saving cell indices')
 np.savetxt(outdir + 'original_cell_indices.txt', cell_filter, fmt='%i')
 
 # save extra categorical variables
-print 'Saving categorical data'
+print('Saving categorical data')
 categ = json.load(open(current_dir + '/categorical_coloring_data.json'))
 o = open(outdir + 'cell_groupings.csv', 'w')
 for k in categ:
@@ -145,7 +145,7 @@ for k in categ:
 o.close()
 
 # save extra continuous variables
-print 'Saving continuous data'
+print('Saving continuous data')
 o = open(outdir + 'custom_colors.csv', 'w')
 with open(current_dir + '/color_data_gene_sets.csv') as f:
     for l in f:
