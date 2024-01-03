@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import helper_functions
 import cgi, cgitb, pickle, os
 cgitb.enable()  # for troubleshooting

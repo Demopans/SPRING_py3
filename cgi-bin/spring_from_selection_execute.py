@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 def sparse_var(E, axis=0):
     mean_gene = E.mean(axis=axis).A.squeeze()

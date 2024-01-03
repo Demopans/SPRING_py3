@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from doublet_helper import *
 import cgi
 import cgitb

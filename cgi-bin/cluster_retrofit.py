@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from scipy.sparse.linalg import eigs
 from sklearn.metrics import silhouette_score
 #========================================================================================#
