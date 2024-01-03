@@ -1,3 +1,7 @@
+# SPRING_dev
+
+**Warning:** This README is out-of-date. It is being updated to reflect the update of `SPRING_dev` to Python 3.
+
 ### Installing Python libraries
 
 To run SPRING Viewer locally, make sure Python 2.7 is installed (and that it's your active version). You will also need the following Python libraries:  
@@ -48,7 +52,7 @@ Each subdirectory should contain:
 ### Running SPRING Viewer
 
 1. Open Terminal (Mac) or Anaconda Prompt (Windows) and change directories (`cd`) to the directory containing this README file (`SPRING_dev/`). 
-2. Start a local server by entering the following: `python -m CGIHTTPServer 8000`
+2. Start a local server by entering the following: `python3 -m http.server --cgi 8000`
 3. Open web browser (preferably Chrome; best to use incognito mode to ensure no cached data is used).
 4. View data set by navigating to corresponding URL: http://localhost:8000/springViewer_1_6_dev.html?path_to/main/subplot. In the example above, if you wanted to view a SPRING plot called `FullDataset_v1` in the main directory `10X_PBMCs_Signac_GitHub`, then you would navigate to http://localhost:8000/springViewer_1_6_dev.html?datasets/10X_PBMCs_Signac_GitHub/FullDataset_v1
 
