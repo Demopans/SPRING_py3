@@ -218,16 +218,26 @@ var my_pathname = window.location.pathname;
 var path_split = my_pathname.split("/")
 var path_start = path_split.slice(0, path_split.length-1).join("/")
 
-base_dir_name = name.slice(1,name.length).split('/');
-base_dir_name = base_dir_name.slice(0,base_dir_name.length-1).join('/');
+// the name might have the / encoded as %2F or %2f
+const possible_split_chars = ["/", "%2F", "%2f"];
+let split_char = "/";
+for (const possible_split_char of possible_split_chars) {
+	const char_index = name.search(possible_split_char);
+	if (char_index >= 0) {
+		split_char = possible_split_char;
+		break;
+	}
+}
+base_dir_name = name.slice(1,name.length).split(split_char);
+base_dir_name = base_dir_name.slice(0,base_dir_name.length-1).join("/");
 d3.select("#all_SPRINGplots_menu").attr("href", my_origin + path_start + "/currentDatasetsList.html?"+base_dir_name);
 
 var force_on = 1;
 var n_nodes = 0;
 var colors_loaded = 0;
 graph_directory = name.slice(1,name.length);
-var tmp = graph_directory.split('/');
-graph_directory = tmp.slice(0,tmp.length-1).join('/');
+var tmp = graph_directory.split(split_char);
+graph_directory = tmp.slice(0,tmp.length-1).join("/");
 sub_directory = tmp[tmp.length-1];
 
 document.title = tmp[tmp.length-1];
