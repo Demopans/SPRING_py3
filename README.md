@@ -6,22 +6,20 @@
 
 To run SPRING Viewer locally, make sure Python 2.7 is installed (and that it's your active version). You will also need the following Python libraries:  
 
-`scikit-learn`  
-`numpy`  
-`scipy`  
-`matplotlib`  
-`h5py`  
-`networkx`  
-`fa2`  
-`python-louvain`
+`numpy`
+`scipy`
+`matplotlib`
+`h5py`
+`networkx`
+`fa2`
 
 We recommend Anaconda to manage your Python libraries. You can download it here (be sure to get the Python 2.7 version):   https://conda.io/miniconda.html. Libraries can then be installed using the command `conda`. To do so, open Terminal (Mac) or Anaconda Prompt (Windows) and enter:  
 
-`conda install scikit-learn numpy scipy matplotlib h5py`
+`conda install numpy scipy matplotlib h5py`
 
 The remaining libraries can be installed using `pip`. Note that if you're a Windows user, you'll first need to install Microsoft Visual C++ compiler for Python (available from http://aka.ms/vcpython27). Enter the following into Terminal or Anaconda Prompt:  
 
-`pip install networkx fa2 python-louvain`
+`pip install networkx fa2`
 
 ### Setting up a SPRING data directory
 See the example notebooks:  
@@ -52,7 +50,7 @@ Each subdirectory should contain:
 ### Running SPRING Viewer
 
 1. Open Terminal (Mac) or Anaconda Prompt (Windows) and change directories (`cd`) to the directory containing this README file (`SPRING_dev/`). 
-2. Start a local server by entering the following: `python3 -m http.server --cgi 8000`
+2. Start a local server by entering the following: `./start_server.sh`
 3. Open web browser (preferably Chrome; best to use incognito mode to ensure no cached data is used).
 4. View data set by navigating to corresponding URL: http://localhost:8000/springViewer_1_6_dev.html?path_to/main/subplot. In the example above, if you wanted to view a SPRING plot called `FullDataset_v1` in the main directory `10X_PBMCs_Signac_GitHub`, then you would navigate to http://localhost:8000/springViewer_1_6_dev.html?datasets/10X_PBMCs_Signac_GitHub/FullDataset_v1
 
