@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 import os
-import scipy.sparse as ssp
 import numpy as np
 import h5py
 import json
 import time
-import sys
-import io
-import urllib.parse
+
+from get_stdin_data import get_stdin_data
 
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
@@ -25,15 +23,12 @@ def strfloat(x):
     return "%.3f" %x
 
 
-totalBytes = int(os.environ.get('CONTENT_LENGTH', 0))
-reqbin = io.open(sys.stdin.fileno(), "rb").read(totalBytes)
-reqstr = reqbin.decode("utf-8")
-data = urllib.parse.parse_qs(reqstr, keep_blank_values=True)
+data, running_cgi = get_stdin_data()
 
-base_dir = data.get('base_dir')[0]
-sub_dir = data.get('sub_dir')[0]
-sel_filter = data.get('selected_cells')[0]
-comp_filter = data.get('compared_cells')[0]
+base_dir = data.get('base_dir')
+sub_dir = data.get('sub_dir')
+sel_filter = data.get('selected_cells')
+comp_filter = data.get('compared_cells')
 
 #logf = sub_dir + '/tmplogenrich'
 logf = 'tmplogenrich'
@@ -130,6 +125,9 @@ update_log(logf, 'filtered lists -- %.3f' %(t1-t0))
 
 hf.close()
 
-print("Content-Type: text/plain")
-print()
+
+if running_cgi:
+    print("Content-Type: text/plain")
+    print()
+
 print('\n'.join(gene_list) + '\t' + '\n'.join(map(strfloat,scores)))
