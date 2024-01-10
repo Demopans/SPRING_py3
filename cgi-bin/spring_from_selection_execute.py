@@ -132,7 +132,8 @@ def execute_spring(param_filename):
     cell_filter = np.load(current_dir + '/cell_filter.npy')[extra_filter]
     np.save(new_dir + '/cell_filter.npy', cell_filter)
     np.savetxt(new_dir + '/cell_filter.txt', cell_filter, fmt='%i')
-    gene_list = np.loadtxt(base_dir + '/genes.txt', dtype=str, delimiter='\t', comments="")
+    gene_list = np.loadtxt(base_dir + '/genes.txt',
+                           dtype=str, delimiter='\t', comments=None)
     prefix_map = {}
     for g in gene_list: prefix_map[g.split()[0]] = g
     for g in gene_list: prefix_map[g.split()[-1]] = g
@@ -355,7 +356,8 @@ def execute_spring(param_filename):
     ################
     # Save PCA, gene filter, total counts
     if os.path.exists(base_dir + '/total_counts.txt'):
-        total_counts = np.loadtxt(base_dir + '/total_counts.txt', comments="")[cell_filter]
+        total_counts = np.loadtxt(
+            base_dir + '/total_counts.txt', comments=None)[cell_filter]
         np.savez_compressed(new_dir + '/intermediates.npz', Epca = Epca, gene_filter = gene_filter, total_counts = total_counts)
     else:
         np.savez_compressed(new_dir + '/intermediates.npz', Epca = Epca, gene_filter = gene_filter)

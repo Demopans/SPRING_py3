@@ -79,7 +79,7 @@ try:
 	A = ssp.load_npz(sub_dir + '/A.npz')
 except:
 	cell_filter =  np.load(sub_dir + '/' + 'cell_filter.npy')
-	edges = np.loadtxt(sub_dir + '/edges.csv', delimiter=';',comments="")
+	edges = np.loadtxt(sub_dir + '/edges.csv', delimiter=';', comments=None)
 	A = ssp.lil_matrix((len(cell_filter), len(cell_filter)))
 	for iEdge in range(edges.shape[0]):
 	    ii = edges[iEdge,0]
