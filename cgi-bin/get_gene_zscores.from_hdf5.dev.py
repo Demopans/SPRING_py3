@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import cgi
-import cgitb
 import os
 import scipy.sparse as ssp
 import numpy as np
@@ -24,7 +23,6 @@ def update_log(fname, logdat, overwrite=False):
 def strfloat(x):
     return "%.3f" %x
 
-cgitb.enable()  # for troubleshooting
 data = cgi.FieldStorage()
 base_dir = data.getvalue('base_dir')
 sub_dir = data.getvalue('sub_dir')

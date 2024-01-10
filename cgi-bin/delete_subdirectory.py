@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import cgi
-import cgitb
 import os
 
 cwd = os.getcwd()
@@ -8,7 +7,6 @@ if cwd.endswith('cgi-bin'):
     os.chdir('../')
 
 
-cgitb.enable()  # for troubleshooting
 print("Content-Type: text/html")
 print() 
 

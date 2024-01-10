@@ -1,8 +1,6 @@
 #!/groups/kleintools/py27/bin/python
 
 import cgi
-import cgitb
-cgitb.enable()  # for troubleshooting
 print("Content-Type: text/html")
 print()
 

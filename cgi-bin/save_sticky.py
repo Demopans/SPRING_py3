@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-import helper_functions
-import cgi, cgitb, pickle, os, json
-cgitb.enable()  # for troubleshooting
+import cgi
+import os
+import json
 data = cgi.FieldStorage()
 
 

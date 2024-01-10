@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 from doublet_helper import *
 import cgi
-import cgitb
 import os
 import json
-cgitb.enable()  # for troubleshooting
 print("Content-Type: text/plain\n")
 
 #========================================================================================#
