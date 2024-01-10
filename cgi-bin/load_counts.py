@@ -7,7 +7,7 @@ cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
     os.chdir('../')
 
-reqstr = sys.stdin.readline()
+reqstr = ''.join(sys.stdin)
 data = urllib.parse.parse_qs(reqstr, keep_blank_values=True)
 
 base_dir = data.get('base_dir')[0]
