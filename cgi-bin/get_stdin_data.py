@@ -5,7 +5,7 @@ import io
 import urllib.parse
 
 
-def get_stdin_data(make_like_cgi=True):
+def get_stdin_data():
   totalBytes = int(os.environ.get('CONTENT_LENGTH', 0))
   running_cgi = totalBytes > 0
 
@@ -15,13 +15,11 @@ def get_stdin_data(make_like_cgi=True):
   else:
     reqstr = ''.join(sys.stdin)
 
-  data = urllib.parse.parse_qs(reqstr, keep_blank_values=True)
+  data: dict[str, list[str]] = urllib.parse.parse_qs(
+      reqstr, keep_blank_values=True)
 
-  if make_like_cgi:
-    # only use the first argument from the lists, treat empty as None
-    for key in data.keys():
-      data[key] = data[key][0]
-      if data[key] == "":
-        data[key] = None
+  output: dict[str, str] = {}
+  for key in data.keys():
+    output[key] = data[key][0]
 
-  return (data, running_cgi)
+  return (output, running_cgi)
