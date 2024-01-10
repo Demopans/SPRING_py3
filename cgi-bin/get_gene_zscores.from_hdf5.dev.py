@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-import cgi
 import os
 import scipy.sparse as ssp
 import numpy as np
 import h5py
 import json
 import time
-
+import sys
+import io
+import urllib.parse
 
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
@@ -23,11 +24,16 @@ def update_log(fname, logdat, overwrite=False):
 def strfloat(x):
     return "%.3f" %x
 
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-sub_dir = data.getvalue('sub_dir')
-sel_filter = data.getvalue('selected_cells')
-comp_filter = data.getvalue('compared_cells')
+
+totalBytes = int(os.environ.get('CONTENT_LENGTH', 0))
+reqbin = io.open(sys.stdin.fileno(), "rb").read(totalBytes)
+reqstr = reqbin.decode("utf-8")
+data = urllib.parse.parse_qs(reqstr, keep_blank_values=True)
+
+base_dir = data.get('base_dir')[0]
+sub_dir = data.get('sub_dir')[0]
+sel_filter = data.get('selected_cells')[0]
+comp_filter = data.get('compared_cells')[0]
 
 #logf = sub_dir + '/tmplogenrich'
 logf = 'tmplogenrich'
@@ -41,7 +47,7 @@ else:
     sel_filter = []
     sel_scores = np.zeros(len(gene_list), dtype=float)
 
-if str(comp_filter) != "None":
+if str(comp_filter) != "None" and str(comp_filter) != "":
     comp_filter = np.sort(np.array(list(map(int,comp_filter.split(',')))))
 else:
     comp_filter = []
