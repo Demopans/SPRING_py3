@@ -17,9 +17,22 @@ We recommend Anaconda to manage your Python libraries. You can download it here 
 
 `conda install numpy scipy matplotlib h5py`
 
-The remaining libraries can be installed using `pip`. Note that if you're a Windows user, you'll first need to install Microsoft Visual C++ compiler for Python (available from http://aka.ms/vcpython27). Enter the following into Terminal or Anaconda Prompt:  
+The remaining library can be installed using `pip`. Note that if you're a Windows user, you'll first need to install Microsoft Visual C++ compiler for Python (available from http://aka.ms/vcpython27). Enter the following into Terminal or Anaconda Prompt:  
 
-`pip install networkx fa2`
+`pip install networkx`
+
+Finally, `fa2` has to be installed from modified source code. To do so, you'll create a folder with the source code with these commands:
+
+```bash
+git clone https://github.com/bhargavchippada/forceatlas2
+cd forceatlas2
+```
+
+You then need to modify the `setup.py` file in that folder as described in [this pull request](https://github.com/bhargavchippada/forceatlas2/pull/46). To do so, copy the contents of `fa2_patched_setup.py` from this folder to `setup.py` in the `forceatlas2` folder. Do not change the name of `setup.py`. Once you've copied over the changes, run the following command while in the `forceatlas2` folder:
+
+```bash
+pip install . --user
+```
 
 ### Setting up a SPRING data directory
 See the example notebooks:  
