@@ -45,11 +45,14 @@ def run_script(script_name):
     if not os.path.isfile(script_path):
         abort(404)
 
+    # Convert form data to a string
+    form_data_str = '&'.join(
+        f"{key}={value}" for key, value in request.form.items())
+
     # Execute the script
     try:
-        result = subprocess.run(['python', script_path],
-                                capture_output=True, text=True, check=True)
-        print(result.stdout)
+        result = subprocess.run(
+            ['python', script_path], input=form_data_str, text=True, capture_output=True, check=True)
         return result.stdout
     except subprocess.CalledProcessError as e:
         abort(500, description=e.stderr)
