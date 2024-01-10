@@ -22,7 +22,7 @@ def handle_post():
     return 'POST request processed'
 
 
-ALLOWED_EXTENSIONS = {'txt', 'json', 'csv', 'js'}
+ALLOWED_EXTENSIONS = {'txt', 'json', 'csv', 'js', 'css', 'html'}
 
 base_directory = os.path.dirname(os.path.abspath(__file__))
 scripts_folder = "cgi-bin"
