@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-import cgi
-print("Content-Type: text/html")
-print()
 import os
 import pickle
 import numpy as np
-import subprocess
 
 import spring_from_selection_execute
+
+from get_stdin_data import get_stdin_data
+
+data, running_cgi = get_stdin_data()
 
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
@@ -17,15 +17,18 @@ if cwd.endswith('cgi-bin'):
 # CGI
 do_the_rest = True
 
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-current_dir_short = data.getvalue('current_dir').strip('/')
-new_dir_short = data.getvalue('new_dir')
+if running_cgi:
+	print("Content-Type: text/html")
+	print()
+
+base_dir = data.get('base_dir')
+current_dir_short = data.get('current_dir').strip('/')
+new_dir_short = data.get('new_dir')
 
 # ERROR HANDLING HERE
-base_filter = data.getvalue('selected_cells')
+base_filter = data.get('selected_cells')
 current_dir = base_dir + '/' + current_dir_short
-this_url = data.getvalue('this_url')
+this_url = data.get('this_url')
 
 all_errors = []
 
@@ -61,7 +64,7 @@ if len(found_bad) > 0:
 
 # ERROR HANDLING
 try:
-	user_email = data.getvalue('email')
+	user_email = data.get('email')
 	if "@" not in user_email:
 		all_errors.append('Enter a valid <font color="red">email address</font>.<br>')
 		do_the_rest = False
@@ -69,19 +72,19 @@ except:
 	user_email = ''
 
 try:
-	min_cells = int(data.getvalue('minCells'))
+	min_cells = int(data.get('minCells'))
 except:
 	all_errors.append('Enter a number for <font color="red">min expressing cells</font>.<br>')
 	do_the_rest = False
 
 try:
-	min_counts = float(data.getvalue('minCounts'))
+	min_counts = float(data.get('minCounts'))
 except:
 	all_errors.append('Enter a number for <font color="red">min number of UMIs</font>.<br>')
 	do_the_rest = False
 
 try:
-	min_vscore_pctl = float(data.getvalue('varPctl'))
+	min_vscore_pctl = float(data.get('varPctl'))
 	if min_vscore_pctl > 100 or min_vscore_pctl < 0:
 		all_errors.append('Enter a value 0-100 for <font color="red">gene variability</font>.<br>')
 		do_the_rest = False
@@ -90,7 +93,7 @@ except:
 	do_the_rest = False
 
 try:
-	num_pc = int(data.getvalue('numPC'))
+	num_pc = int(data.get('numPC'))
 	if num_pc < 1:
 		all_errors.append('Enter an integer >0 for <font color="red">number of principal components</font>.<br>')
 		do_the_rest = False
@@ -99,7 +102,7 @@ except:
 	do_the_rest = False
 
 try:
-	k_neigh = int(data.getvalue('kneigh'))
+	k_neigh = int(data.get('kneigh'))
 	if k_neigh < 1:
 		all_errors.append('Enter an integer >0 for <font color="red">number of nearest neighbors</font>.<br>')
 		do_the_rest = False
@@ -108,7 +111,7 @@ except:
 	do_the_rest = False
 
 try:
-	num_fa2_iter = int(data.getvalue('nIter'))
+	num_fa2_iter = int(data.get('nIter'))
 	if num_fa2_iter < 1:
 		all_errors.append('Enter an integer >0 for <font color="red">number of force layout iterations</font>.<br>')
 		do_the_rest = False
@@ -117,25 +120,25 @@ except:
 	do_the_rest = False
 
 try:
-	description = data.getvalue('description')
+	description = data.get('description')
 except:
 	description = ''
 
 try:
-	animate = data.getvalue('animate')
+	animate = data.get('animate')
 except:
 	animate = 'No'
 
 try:
-	project_filter = data.getvalue('compared_cells')
+	project_filter = data.get('compared_cells')
 	project_filter = np.sort(np.array(list(map(int,project_filter.split(',')))))
 except:
 	project_filter = np.array([])
 	
 
 try:
-	include_exclude = data.getvalue('include_exclude')
-	custom_genes = data.getvalue('custom_genes').replace('\r','\n').split('\n')
+	include_exclude = data.get('include_exclude')
+	custom_genes = data.get('custom_genes').replace('\r', '\n').split('\n')
 except:
 	include_exclude = 'Exclude'
 	custom_genes = []

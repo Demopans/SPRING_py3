@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 from doublet_helper import *
-import cgi
 import os
 import json
-print("Content-Type: text/plain\n")
+
+from get_stdin_data import get_stdin_data
+
+data, running_cgi = get_stdin_data()
 
 #========================================================================================#
 
@@ -50,12 +52,11 @@ if cwd.endswith('cgi-bin'):
     os.chdir('../')
 t00 = time.time()
 
+if running_cgi:
+    print("Content-Type: text/plain\n")
 
-
-
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-sub_dir = data.getvalue('sub_dir')
+base_dir = data.get('base_dir')
+sub_dir = data.get('sub_dir')
 
 cell_filter = np.load(sub_dir + '/cell_filter.npy')
 nodes = list(range(len(cell_filter)))

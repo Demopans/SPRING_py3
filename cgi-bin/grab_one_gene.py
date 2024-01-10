@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from get_stdin_data import get_stdin_data
 import time
 import os
 
@@ -21,11 +22,6 @@ def strfloat(x):
 logf = 'tmplog2'
 
 t0 = time.time()
-import cgi
-t1 = time.time()
-update_log(logf, 'import cgi -- %.3f' %(t1-t0), True)
-
-t0 = time.time()
 import numpy as np
 t1 = time.time()
 update_log(logf, 'import numpy -- %.3f' %(t1-t0))
@@ -36,16 +32,26 @@ t1 = time.time()
 update_log(logf, 'import h5py -- %.3f' %(t1-t0))
 
 t0 = time.time()
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-sub_dir = data.getvalue('sub_dir')
-gene = data.getvalue('gene')
+t1 = time.time()
+update_log(logf, 'from get_stdin_data import get_stdin_data -- %.3f' %
+           (t1-t0), True)
+
+t0 = time.time()
+data, running_cgi = get_stdin_data()
+t1 = time.time()
+update_log(logf, 'data, running_cgi = get_stdin_data() -- %.3f' %
+           (t1-t0), True)
+
+t0 = time.time()
+base_dir = data.get('base_dir')
+sub_dir = data.get('sub_dir')
+gene = data.get('gene')
 t1 = time.time()
 update_log(logf, 'got cgi data -- %.3f' %(t1-t0))
 update_log(logf, gene)
 
 t0 = time.time()
-#cell_filter = np.array(map(int, data.getvalue('cell_filter').split(',')))
+# cell_filter = np.array(map(int, data.get('cell_filter').split(',')))
 cell_filter =  np.load(sub_dir + '/' + 'cell_filter.npy')
 t1 = time.time()
 update_log(logf, 'got cell filter-- %.3f' %(t1-t0))
@@ -86,8 +92,9 @@ t1 = time.time()
 update_log(logf, 'filtered array -- %.3f' %(t1-t0))
 
 t0 = time.time()
-print("Content-Type: text/plain")
-print()
+if running_cgi:
+	print("Content-Type: text/plain")
+	print()
 print('\n'.join(map(strfloat,E)))
 t1 = time.time()
 update_log(logf, 'returned data -- %.3f' %(t1-t0))

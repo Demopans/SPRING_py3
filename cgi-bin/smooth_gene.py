@@ -3,6 +3,10 @@
 import time
 import os
 
+from get_stdin_data import get_stdin_data
+
+data, running_cgi = get_stdin_data()
+
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
     os.chdir('../')
@@ -30,11 +34,6 @@ def sparse_multiply(E, a):
 logf = 'tmplog2'
 
 t0 = time.time()
-import cgi
-t1 = time.time()
-update_log(logf, 'import cgi -- %.3f' %(t1-t0), True)
-
-t0 = time.time()
 import numpy as np
 t1 = time.time()
 update_log(logf, 'import numpy -- %.3f' %(t1-t0))
@@ -44,21 +43,20 @@ import scipy.sparse as ssp
 t1 = time.time()
 update_log(logf, 'import scipy sparse -- %.3f' %(t1-t0))
 
-
-print("Content-Type: text/plain")
-print()
+if running_cgi:
+	print("Content-Type: text/plain")
+	print()
 
 t0 = time.time()
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-sub_dir = data.getvalue('sub_dir')
-reds = np.array(list(map(float, data.getvalue('raw_r').split(','))))[:,None]
-greens = np.array(list(map(float, data.getvalue('raw_g').split(','))))[:,None]
-blues = np.array(list(map(float, data.getvalue('raw_b').split(','))))[:,None]
+base_dir = data.get('base_dir')
+sub_dir = data.get('sub_dir')
+reds = np.array(list(map(float, data.get('raw_r').split(','))))[:, None]
+greens = np.array(list(map(float, data.get('raw_g').split(','))))[:, None]
+blues = np.array(list(map(float, data.get('raw_b').split(','))))[:, None]
 E = np.hstack((reds, greens, blues))
-#E = np.array(map(float, data.getvalue('raw_g').split(',')))[:,None]
+# E = np.array(map(float, data.get('raw_g').split(',')))[:,None]
 
-sel = data.getvalue('selected')[1:]
+sel = data.get('selected')[1:]
 print(sel)
 if len(sel)==0: 
 	sel = np.arange(E.shape[0])
@@ -67,8 +65,8 @@ else:
 	E = E[sel,:]
 
 
-beta = float(data.getvalue('beta'))
-n_rounds = int(data.getvalue('n_rounds'))
+beta = float(data.get('beta'))
+n_rounds = int(data.get('n_rounds'))
 t1 = time.time()
 update_log(logf, 'got cgi data -- %.3f' %(t1-t0))
 
@@ -82,10 +80,10 @@ except:
 	edges = np.loadtxt(sub_dir + '/edges.csv', delimiter=';', comments=None)
 	A = ssp.lil_matrix((len(cell_filter), len(cell_filter)))
 	for iEdge in range(edges.shape[0]):
-	    ii = edges[iEdge,0]
-	    jj = edges[iEdge,1]
-	    A[ii,jj] = 1
-	    A[jj,ii] = 1
+		ii = edges[iEdge, 0]
+		jj = edges[iEdge, 1]
+		A[ii, jj] = 1
+		A[jj, ii] = 1
 	A = A.tocsc()
 	ssp.save_npz(sub_dir + '/A.npz', A)
 	

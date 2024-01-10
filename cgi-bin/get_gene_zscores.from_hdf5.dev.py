@@ -7,6 +7,8 @@ import time
 
 from get_stdin_data import get_stdin_data
 
+data, running_cgi = get_stdin_data()
+
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
     os.chdir('../')
@@ -22,8 +24,6 @@ def update_log(fname, logdat, overwrite=False):
 def strfloat(x):
     return "%.3f" %x
 
-
-data, running_cgi = get_stdin_data()
 
 base_dir = data.get('base_dir')
 sub_dir = data.get('sub_dir')

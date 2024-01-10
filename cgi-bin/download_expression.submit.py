@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-import cgi
-print("Content-Type: text/html")
-print()
-
 import os
 import pickle
 import numpy as np
 import subprocess
 import time
+
+from get_stdin_data import get_stdin_data
+
+data, running_cgi = get_stdin_data()
+
+if running_cgi:
+    print("Content-Type: text/html")
+    print()
 
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
@@ -16,13 +20,12 @@ if cwd.endswith('cgi-bin'):
 # CGI
 do_the_rest = True
 
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-current_dir = data.getvalue('current_dir')
-extra_filter = data.getvalue('selected_cells')
-user_email = data.getvalue('email')
-selection_name = data.getvalue('selection_name')
-my_url_origin = data.getvalue('my_origin')
+base_dir = data.get('base_dir')
+current_dir = data.get('current_dir')
+extra_filter = data.get('selected_cells')
+user_email = data.get('email')
+selection_name = data.get('selection_name')
+my_url_origin = data.get('my_origin')
 
 all_errors = []
 
@@ -48,7 +51,7 @@ if len(found_bad) > 0:
 	all_errors.append('Enter a <font color="red">cell subset name</font> without the following characters: <font face="courier">%s</font><br>' %('   '.join(found_bad)))
 
 try:
-	user_email = data.getvalue('email')
+	user_email = data.get('email')
 	if "@" not in user_email:
 		all_errors.append('Enter a valid <font color="red">email address</font>.<br>')
 		do_the_rest = False

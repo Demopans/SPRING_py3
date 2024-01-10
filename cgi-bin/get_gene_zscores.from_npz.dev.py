@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-import cgi
 import scipy.sparse as ssp
 import numpy as np
 import json
 import time
 import os
+
+from get_stdin_data import get_stdin_data
+
+data, running_cgi = get_stdin_data()
 
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
@@ -21,11 +24,11 @@ def update_log(fname, logdat, overwrite=False):
 def strfloat(x):
     return "%.3f" %x
 
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-sub_dir = data.getvalue('sub_dir')
-sel_filter = data.getvalue('selected_cells')
-comp_filter = data.getvalue('compared_cells')
+
+base_dir = data.get('base_dir')
+sub_dir = data.get('sub_dir')
+sel_filter = data.get('selected_cells')
+comp_filter = data.get('compared_cells')
 
 #logf = sub_dir + '/tmplogenrich'
 logf = 'tmplogenrich'
@@ -108,6 +111,9 @@ gene_list = gene_list[o]
 scores = scores[o]
 t1 = time.time()
 update_log(logf, 'filtered lists -- %.3f' %(t1-t0))
-print("Content-Type: text/plain")
-print()
+
+if running_cgi:
+    print("Content-Type: text/plain")
+    print()
+
 print('\n'.join(gene_list) + '\t' + '\n'.join(map(strfloat,scores)))

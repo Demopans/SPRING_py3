@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 from doublet_helper import *
-import cgi
 import os
 import json
-print("Content-Type: text/plain\n")
+
+from get_stdin_data import get_stdin_data
+
+data, running_cgi = get_stdin_data()
 
 #========================================================================================#
 
@@ -167,21 +169,20 @@ def woublet(E=None, exp_doub_rate = 0.1, sim_doublet_ratio=3, k=50, use_approx_n
 #========================================================================================#
 
 
-
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
     os.chdir('../')
 t00 = time.time()
 
+if running_cgi:
+    print("Content-Type: text/plain\n")
 
 
-
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-sub_dir = data.getvalue('sub_dir')
-k = int(data.getvalue('k'))
-r = float(data.getvalue('r'))
-f = float(data.getvalue('f'))
+base_dir = data.get('base_dir')
+sub_dir = data.get('sub_dir')
+k = int(data.get('k'))
+r = float(data.get('r'))
+f = float(data.get('f'))
 
 
 if os.path.exists(sub_dir + '/intermediates.npz'):
