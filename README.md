@@ -1,10 +1,8 @@
 # SPRING_dev
 
-**Warning:** This README is out-of-date. It is being updated to reflect the update of `SPRING_dev` to Python 3.
+## Conda Environment and Installing Python libraries
 
-### Installing Python libraries
-
-To run SPRING Viewer locally, make sure Python 2.7 is installed (and that it's your active version). You will also need the following Python libraries:  
+To run SPRING Viewer locally, you'll need to set up a conda environment for it and install its dependencies:
 
 `numpy`
 `scipy`
@@ -12,16 +10,23 @@ To run SPRING Viewer locally, make sure Python 2.7 is installed (and that it's y
 `h5py`
 `networkx`
 `fa2`
+`flask`
 
-We recommend Anaconda to manage your Python libraries. You can download it here (be sure to get the Python 2.7 version):   https://conda.io/miniconda.html. Libraries can then be installed using the command `conda`. To do so, open Terminal (Mac) or Anaconda Prompt (Windows) and enter:  
+We recommend Anaconda (specifically Miniconda) to manage your Python libraries. You can download it here: https://conda.io/miniconda.html. 
 
-`conda install numpy scipy matplotlib h5py`
+Create a Python 3 conda environment for SPRING viewer to run in. For example, to create a conda environment called `spring_viewer` with Python 3.12, you can open Terminal (Mac) or Anaconda Prompt (Windows) and enter:
 
-The remaining library can be installed using `pip`. Note that if you're a Windows user, you'll first need to install Microsoft Visual C++ compiler for Python (available from http://aka.ms/vcpython27). Enter the following into Terminal or Anaconda Prompt:  
+`conda create -n spring_viewer python=3.12`
 
-`pip install networkx`
+Activate your new conda environment by running:
 
-Finally, `fa2` has to be installed from modified source code. To do so, you'll create a folder with the source code with these commands:
+`conda activate spring_viewer`
+
+Most of the libraries SPRING needs can then be installed by running:
+
+`conda install numpy scipy matplotlib h5py flask networkx`
+
+The `fa2` library has to be installed from modified source code. To do so, you'll create a folder with the source code by running these commands:
 
 ```bash
 git clone https://github.com/bhargavchippada/forceatlas2
@@ -34,7 +39,7 @@ You then need to modify the `setup.py` file in that folder as described in [this
 pip install . --user
 ```
 
-### Setting up a SPRING data directory
+## Setting up a SPRING data directory
 See the example notebooks:  
 [Hematopoietic progenitor FACS subpopulations](./data_prep/spring_example_HPCs.ipynb)  
 [Mature blood cells (10X Genomics 4k PBMCs)](./data_prep/spring_example_pbmc4k.ipynb)  
@@ -60,14 +65,14 @@ Each subdirectory should contain:
 `graph_data.json`  
 `run_info.json`  
 
-### Running SPRING Viewer
+## Running SPRING Viewer
 
 1. Open Terminal (Mac) or Anaconda Prompt (Windows) and change directories (`cd`) to the directory containing this README file (`SPRING_dev/`). 
 2. Start a local server by entering the following: `./start_server.sh`
 3. Open web browser (preferably Chrome; best to use incognito mode to ensure no cached data is used).
 4. View data set by navigating to corresponding URL: http://localhost:8000/springViewer_1_6_dev.html?path_to/main/subplot. In the example above, if you wanted to view a SPRING plot called `FullDataset_v1` in the main directory `10X_PBMCs_Signac_GitHub`, then you would navigate to http://localhost:8000/springViewer_1_6_dev.html?datasets/10X_PBMCs_Signac_GitHub/FullDataset_v1
 
-### Signac
+## Signac
 
 To classify cellular phenotypes in single cell data, [SignacX](https://cran.r-project.org/web/packages/SignacX/) was integrated with the files output by SPRING (specifically, the matrix.mtx, genes.txt, edges.csv and categorical_coloring_data.json files), such that SPRING data can be classified by Signac in R with only a few lines of code. First, install SignacX in R:
 
