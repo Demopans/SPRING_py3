@@ -14,42 +14,36 @@ ALLOWED_EXTENSIONS = {'txt', 'json', 'csv',
 SCRIPTS_FOLDER = "cgi-bin"
 
 
-@app.route('/<path:filepath>', methods=['GET'])
-def serve_file(filepath):
-    # Check if the path is safe
-    if '..' in filepath or filepath.startswith('/'):
-        abort(404)  # Not found for security reasons
+@app.route('/<path:file_path>', methods=['GET'])
+def serve_file(file_path):
+    # Don't allow paths which exit this directory
+    if '..' in file_path:
+        abort(400)
 
     # Extract the file extension and check if it's allowed
-    file_extension = os.path.splitext(filepath)[1].lstrip('.').lower()
+    file_extension = os.path.splitext(file_path)[1].lstrip('.').lower()
     if file_extension not in ALLOWED_EXTENSIONS:
-        abort(404)  # Not found if the file extension is not allowed
-
-    # Full path to the file
-    full_path = os.path.join(base_directory, filepath)
+        print(f"400 Unsupported File Extension: {file_extension}")
+        abort(400)
 
     # Check if the file exists
+    full_path = os.path.join(base_directory, file_path)
     if not os.path.isfile(full_path):
-        abort(404)  # Not found
+        abort(404)
 
     # Serve the file content
-    return send_from_directory(base_directory, filepath)
+    return send_from_directory(base_directory, file_path)
 
 
-@app.route(f'/{SCRIPTS_FOLDER}/<script_name>', methods=['POST'])
+@app.route(f'/{SCRIPTS_FOLDER}/<script_name>.py', methods=['POST'])
 def run_script(script_name):
-    # Security check: Ensure the script name does not contain any directory parts
-    if '/' in script_name or '\\' in script_name:
-        abort(404)
-
-    # Check that it's a Python script
-    if not script_name.endswith('.py'):
-        abort(404)
-
-    # Construct the full path to the script
-    script_path = os.path.join(base_directory, SCRIPTS_FOLDER, script_name)
+    # Don't allow paths which exit this directory
+    if '..' in script_name:
+        abort(400)
 
     # Check if the script exists
+    script_path = os.path.join(
+        base_directory, SCRIPTS_FOLDER, script_name) + ".py"
     if not os.path.isfile(script_path):
         abort(404)
 
