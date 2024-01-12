@@ -3,12 +3,9 @@ import os
 import sys
 import scipy.sparse as ssp
 import numpy as np
-import h5py
 import json
 import time
 from wolkit import *
-import networkx as nx
-from fa2 import ForceAtlas2
 import pickle
 import datetime
 
