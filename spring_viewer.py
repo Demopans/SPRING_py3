@@ -35,7 +35,7 @@ def find_available_port(start_port=DEFAULT_PORT, num_ports_to_try=50):
     )
 
 
-def open(path="data/organoids/adata_36h_perturb_processed_09282020/all_cells", debug: bool = False):
+def open(path: str, debug: bool = False):
     port = find_available_port()
     server_thread = _run_server_in_thread(debug=debug, port=port)
     url = f"http://localhost:{port}/{VIEWER_FILE}?{path}"
@@ -44,4 +44,4 @@ def open(path="data/organoids/adata_36h_perturb_processed_09282020/all_cells", d
 
 
 if __name__ == '__main__':
-    open()
+    open("data/organoids/adata_36h_perturb_processed_09282020/all_cells")
