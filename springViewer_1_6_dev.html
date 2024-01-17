@@ -206,6 +206,13 @@ function callback() {
 		if (!event.target.matches('#layout_dropdown_button')) { closeDropdown(); }
 	}
 
+	function click_edges_toggler() {
+		var edges_toggler = document.getElementById('toggle_edges_layout');
+		if (edges_toggler && typeof edges_toggler.click === 'function') {
+			edges_toggler.click();
+		}
+	}
+	setTimeout(click_edges_toggler, 450);
 }
 
 var name = window.location.search;
