@@ -16,6 +16,7 @@ def _run_server_in_thread(debug: bool, port: int):
     # Start the Flask server in a new thread
     server_thread = threading.Thread(target=start_server)
     server_thread.start()
+    return server_thread
 
 
 def find_available_port(start_port=DEFAULT_PORT, num_ports_to_try=50):
@@ -35,10 +36,11 @@ def find_available_port(start_port=DEFAULT_PORT, num_ports_to_try=50):
 
 
 def open(path="data/organoids/adata_36h_perturb_processed_09282020/all_cells", debug: bool = False):
-  port = find_available_port()
-  _run_server_in_thread(debug=debug, port=port)
-  url = f"http://localhost:{port}/{VIEWER_FILE}?{path}"
-  webbrowser.open_new_tab(url)
+    port = find_available_port()
+    server_thread = _run_server_in_thread(debug=debug, port=port)
+    url = f"http://localhost:{port}/{VIEWER_FILE}?{path}"
+    webbrowser.open_new_tab(url)
+    server_thread.join()
 
 
 if __name__ == '__main__':
