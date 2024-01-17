@@ -8,8 +8,19 @@ app = Flask(__name__)
 
 base_directory = os.path.dirname(os.path.abspath(__file__))
 
-ALLOWED_EXTENSIONS = {'txt', 'json', 'csv',
-                      'js', 'css', 'html', 'png', 'svg', 'gif'}
+ALLOWED_EXTENSIONS = {
+    'txt',
+    'json',
+    'csv',
+    'js',
+    'css',
+    'html',
+    'png',
+    'svg',
+    'gif',
+    'map',
+    'ico',
+}
 
 SCRIPTS_FOLDER = "cgi-bin"
 
