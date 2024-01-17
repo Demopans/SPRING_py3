@@ -9,7 +9,9 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('-d', '--debug', action='store_true',
                     help='run the server in debug mode')
-parser.add_argument('-p', '--port', type=int, default=8000,
+
+DEFAULT_PORT = 8000
+parser.add_argument('-p', '--port', type=int, default=DEFAULT_PORT,
                     help='set the port for the server')
 
 args = parser.parse_args()
@@ -79,6 +81,10 @@ def run_script(script_name):
         return result.stdout
     except subprocess.CalledProcessError as e:
         abort(500, description=e.stderr)
+
+
+def run_server(port: int = DEFAULT_PORT, debug: bool = False):
+    app.run(port=port, debug=debug)
 
 
 if __name__ == '__main__':
