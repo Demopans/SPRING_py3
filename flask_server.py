@@ -1,8 +1,18 @@
+import argparse
 import os
 import subprocess
 
 from flask import Flask, request, abort, send_from_directory
 
+parser = argparse.ArgumentParser(
+    description='Start Flask server with optional debugging and port specification.')
+
+parser.add_argument('-d', '--debug', action='store_true',
+                    help='run the server in debug mode')
+parser.add_argument('-p', '--port', type=int, default=8000,
+                    help='set the port for the server')
+
+args = parser.parse_args()
 
 app = Flask(__name__)
 
@@ -72,4 +82,4 @@ def run_script(script_name):
 
 
 if __name__ == '__main__':
-    app.run(port=8000)
+    app.run(port=args.port, debug=args.debug)
