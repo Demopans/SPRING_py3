@@ -68,9 +68,10 @@ Each subdirectory should contain:
 ## Running SPRING Viewer
 
 1. Open Terminal (Mac) or Anaconda Prompt (Windows) and change directories (`cd`) to the directory containing this README file (`SPRING_dev/`). 
-2. Start a local server by entering the following: `./start_server.sh`
-3. Open web browser (preferably Chrome; best to use incognito mode to ensure no cached data is used).
-4. View data set by navigating to corresponding URL: http://localhost:8000/springViewer_1_6_dev.html?path_to/main/subplot. In the example above, if you wanted to view a SPRING plot called `FullDataset_v1` in the main directory `10X_PBMCs_Signac_GitHub`, then you would navigate to http://localhost:8000/springViewer_1_6_dev.html?datasets/10X_PBMCs_Signac_GitHub/FullDataset_v1
+2. Activate your conda environment for running SPRING; you can list all your conda environments by running `conda env list` if you need a reminder of what it's called. As an example, if your environment is called `spring_viewer`, you can activate it by entering the following: `conda activate spring_viewer`
+3. Start a local server by entering the following: `./start_server.sh`
+4. Open web browser (preferably Chrome; best to use incognito mode to ensure no cached data is used).
+5. View data set by navigating to corresponding URL: http://localhost:8000/springViewer_1_6_dev.html?path_to/main/subplot. In the example above, if you wanted to view a SPRING plot called `FullDataset_v1` in the main directory `10X_PBMCs_Signac_GitHub`, then you would navigate to http://localhost:8000/springViewer_1_6_dev.html?datasets/10X_PBMCs_Signac_GitHub/FullDataset_v1
 
 ## Signac
 
