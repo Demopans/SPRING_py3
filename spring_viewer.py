@@ -31,9 +31,9 @@ def find_available_port(start_port=DEFAULT_PORT, num_ports_to_try=50):
     )
 
 
-def _run_server_in_thread(debug: bool, port: int):
+def _run_server_in_thread(port: int):
     def start_server():
-        run_server(debug=debug, port=port)
+        run_server(port=port)
 
     # Start the Flask server in a new thread
     server_thread = threading.Thread(target=start_server)
@@ -41,12 +41,12 @@ def _run_server_in_thread(debug: bool, port: int):
     return server_thread
 
 
-def open_plot_from_directory(path: str, debug: bool = False):
+def open_plot_from_directory(path: str):
     if not _path_is_valid(path):
         raise RuntimeError(f"Path not valid: {path}")
 
     port = find_available_port()
-    server_thread = _run_server_in_thread(debug=debug, port=port)
+    server_thread = _run_server_in_thread(port=port)
 
     url = f"http://localhost:{port}/{VIEWER_FILE}?{path}"
     webbrowser.open_new_tab(url)
