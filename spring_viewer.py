@@ -9,10 +9,13 @@ from flask_server import run_server, DEFAULT_PORT
 
 VIEWER_FILE = "springViewer_1_6_dev.html"
 
+this_directory = os.path.dirname(os.path.abspath(__file__))
+
 
 def _path_is_valid(path: str) -> bool:
     # TODO: do more checks to see if this is a valid SPRING directory
-    return os.path.isdir(path)
+    path_from_here = os.path.join(this_directory, path)
+    return os.path.isdir(path) or os.path.isdir(path_from_here)
 
 
 def find_available_port(start_port=DEFAULT_PORT, num_ports_to_try=50):
