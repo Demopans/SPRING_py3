@@ -1,4 +1,5 @@
 import errno
+import os
 import socket
 import threading
 import webbrowser
@@ -9,14 +10,9 @@ from flask_server import run_server, DEFAULT_PORT
 VIEWER_FILE = "springViewer_1_6_dev.html"
 
 
-def _run_server_in_thread(debug: bool, port: int):
-    def start_server():
-        run_server(debug=debug, port=port)
-
-    # Start the Flask server in a new thread
-    server_thread = threading.Thread(target=start_server)
-    server_thread.start()
-    return server_thread
+def _path_is_valid(path: str) -> bool:
+    # TODO: do more checks to see if this is a valid SPRING directory
+    return os.path.isdir(path)
 
 
 def find_available_port(start_port=DEFAULT_PORT, num_ports_to_try=50):
@@ -35,13 +31,30 @@ def find_available_port(start_port=DEFAULT_PORT, num_ports_to_try=50):
     )
 
 
-def open(path: str, debug: bool = False):
+def _run_server_in_thread(debug: bool, port: int):
+    def start_server():
+        run_server(debug=debug, port=port)
+
+    # Start the Flask server in a new thread
+    server_thread = threading.Thread(target=start_server)
+    server_thread.start()
+    return server_thread
+
+
+def open_plot_from_directory(path: str, debug: bool = False):
+    if not _path_is_valid(path):
+        raise RuntimeError(f"Path not valid: {path}")
+
     port = find_available_port()
     server_thread = _run_server_in_thread(debug=debug, port=port)
+
     url = f"http://localhost:{port}/{VIEWER_FILE}?{path}"
     webbrowser.open_new_tab(url)
+
     server_thread.join()
 
 
 if __name__ == '__main__':
-    open("data/organoids/adata_36h_perturb_processed_09282020/all_cells")
+    open_plot_from_directory(
+        "data/organoids/adata_36h_perturb_processed_09282020/all_cells"
+    )
