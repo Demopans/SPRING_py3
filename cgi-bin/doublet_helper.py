@@ -425,15 +425,16 @@ def get_knn_graph(X, k=5, dist_metric='euclidean', approx=False, return_edges=Tr
     '''
 
     t0 = time.time()
+
+    AnnoyIndex = None
+
     if approx:
         try:
             from annoy import AnnoyIndex
-        except:
-            approx = False
-            #print 'Could not find library "annoy" for approx. nearest neighbor search'
-    if approx:
-        #print 'Using approximate nearest neighbor search'
+        except ImportError:
+            AnnoyIndex = None
 
+    if AnnoyIndex is not None:
         if dist_metric == 'cosine':
             dist_metric = 'angular'
         npc = X.shape[1]
@@ -448,10 +449,7 @@ def get_knn_graph(X, k=5, dist_metric='euclidean', approx=False, return_edges=Tr
         for iCell in range(ncell):
             knn.append(annoy_index.get_nns_by_item(iCell, k + 1)[1:])
         knn = np.array(knn, dtype=int)
-
     else:
-        #print 'Using sklearn NearestNeighbors'
-
         if dist_metric == 'cosine':
             nbrs = NearestNeighbors(n_neighbors=k, metric=dist_metric, algorithm='brute').fit(X)
         else:

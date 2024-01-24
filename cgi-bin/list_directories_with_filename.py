@@ -15,8 +15,8 @@ if running_cgi:
 	print()
 
 
-path = data.get('path')
-filename = data.get('filename')
+path = data.get('path', '')
+filename = data.get('filename', '')
 out = []
 for f in os.listdir(path):
 	if os.path.exists(path+'/'+f+'/'+filename):

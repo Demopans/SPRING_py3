@@ -8,9 +8,11 @@ To run SPRING Viewer locally, you'll need to set up a conda environment for it a
 `scipy`
 `matplotlib`
 `h5py`
-`networkx`
-`fa2`
 `flask`
+`networkx`
+`scikit-learn` (imported as `sklearn`)
+`python-louvain` (imported as `community`)
+`fa2`
 
 We recommend Anaconda (specifically Miniconda) to manage your Python libraries. You can download it here: https://conda.io/miniconda.html. 
 
@@ -24,7 +26,11 @@ Activate your new conda environment by running:
 
 Most of the libraries SPRING needs can then be installed by running:
 
-`conda install numpy scipy matplotlib h5py flask networkx`
+`conda install numpy scipy matplotlib h5py flask networkx scikit-learn`
+
+Also run:
+
+`pip install annoy python-louvain`
 
 The `fa2` library has to be installed from modified source code. To do so, you'll create a folder with the source code by running these commands:
 
