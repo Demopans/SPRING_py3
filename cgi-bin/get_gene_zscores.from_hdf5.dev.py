@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import os
 import numpy as np
 import h5py
 import json
@@ -8,10 +7,6 @@ import time
 from get_stdin_data import get_stdin_data
 
 data, running_cgi = get_stdin_data()
-
-cwd = os.getcwd()
-if cwd.endswith('cgi-bin'):
-    os.chdir('../')
 
 def update_log(fname, logdat, overwrite=False):
 	if overwrite:
@@ -25,12 +20,11 @@ def strfloat(x):
     return "%.3f" %x
 
 
-base_dir = data.get('base_dir')
-sub_dir = data.get('sub_dir')
+base_dir = data.get_required_dir('base_dir')
+sub_dir = data.get_required_dir('sub_dir')
 sel_filter = data.get('selected_cells')
 comp_filter = data.get('compared_cells')
 
-#logf = sub_dir + '/tmplogenrich'
 logf = 'tmplogenrich'
 update_log(logf, 'Enrichment log:', True)
 

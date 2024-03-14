@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 #========================================================================================#
-import numpy as np, sys, h5py, json
+import numpy as np
+import os
+import sys
+import h5py
+import json
 
-base_dir = sys.argv[1]
+from get_stdin_data import validate_dir_path_exists, validate_path_exists
+
+base_dir = validate_dir_path_exists(sys.argv[1])
 sub_dirs = sys.argv[2]
-gene_sets_path = sys.argv[3]
+gene_sets_path = validate_path_exists(sys.argv[3])
 
 hf = h5py.File(base_dir + '/counts_norm_sparse_genes.hdf5', 'r')
 ncells = hf.attrs['ncells']
@@ -48,18 +54,20 @@ for k,gs in list(gene_sets.items()):
 	scores[k] = ss
 
 # Apply to each subplots
-for dd in sub_dirs.split(','):
-	cell_ix = np.load(base_dir+'/'+dd+'/cell_filter.npy')
-	f = open(base_dir+'/'+dd+'/color_data_gene_sets.csv','a')
+for sub_dir in sub_dirs.split(','):
+	sub_dir = os.path.join(base_dir, sub_dir)
+	cell_ix = np.load(os.path.join(sub_dir, 'cell_filter.npy'))
+	f = open(os.path.join(sub_dir, 'color_data_gene_sets.csv'), 'a')
 	for k,ss in list(scores.items()):
 		newline = ','.join([k]+[repr(x) for x in ss[cell_ix]])
 		f.write(newline+'\n')
 	f.close()
 	
-	color_stats = json.load(open(base_dir+'/'+dd+'/color_stats.json'))
+	color_stats_path = os.path.join(sub_dir, 'color_stats.json')
+	color_stats = json.load(open(color_stats_path))
 	for k,ss in list(scores.items()): 
 		color_stats[k] = (np.mean(ss),np.std(ss),np.min(ss),np.max(ss),np.percentile(ss,99))
-	json.dump(color_stats,open(base_dir+'/'+dd+'/color_stats.json','w'))
+	json.dump(color_stats, open(color_stats_path))
 
 
 

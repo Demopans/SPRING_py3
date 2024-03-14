@@ -2,12 +2,7 @@
 
 from get_stdin_data import get_stdin_data
 import time
-import os
 
-cwd = os.getcwd()
-if cwd.endswith('cgi-bin'):
-    os.chdir('../')
-	
 t00 = time.time()
 def update_log(fname, logdat, overwrite=False):
 	if overwrite:
@@ -32,20 +27,15 @@ t1 = time.time()
 update_log(logf, 'import h5py -- %.3f' %(t1-t0))
 
 t0 = time.time()
-t1 = time.time()
-update_log(logf, 'from get_stdin_data import get_stdin_data -- %.3f' %
-           (t1-t0), True)
-
-t0 = time.time()
 data, running_cgi = get_stdin_data()
 t1 = time.time()
 update_log(logf, 'data, running_cgi = get_stdin_data() -- %.3f' %
            (t1-t0), True)
 
 t0 = time.time()
-base_dir = data.get('base_dir')
-sub_dir = data.get('sub_dir')
-gene = data.get('gene')
+base_dir = data.get_required_dir('base_dir')
+sub_dir = data.get_required_dir('sub_dir')
+gene = data.get_required('gene')
 t1 = time.time()
 update_log(logf, 'got cgi data -- %.3f' %(t1-t0))
 update_log(logf, gene)
