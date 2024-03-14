@@ -18,7 +18,7 @@ args = parser.parse_args()
 
 app = Flask(__name__)
 
-base_directory = os.path.dirname(os.path.abspath(__file__))
+this_directory = os.path.dirname(os.path.abspath(__file__))
 
 ALLOWED_EXTENSIONS = {
     'txt',
@@ -50,12 +50,12 @@ def serve_file(file_path):
         abort(400)
 
     # Check if the file exists
-    full_path = os.path.join(base_directory, file_path)
+    full_path = os.path.join(this_directory, file_path)
     if not os.path.isfile(full_path):
         abort(404)
 
     # Serve the file content
-    return send_from_directory(base_directory, file_path)
+    return send_from_directory(this_directory, file_path)
 
 
 @app.route(f'/{SCRIPTS_FOLDER}/<script_name>.py', methods=['POST'])
@@ -66,7 +66,7 @@ def run_script(script_name):
 
     # Check if the script exists
     script_path = os.path.join(
-        base_directory, SCRIPTS_FOLDER, script_name) + ".py"
+        this_directory, SCRIPTS_FOLDER, script_name) + ".py"
     if not os.path.isfile(script_path):
         abort(404)
 
@@ -88,4 +88,4 @@ def run_server(port: int = DEFAULT_PORT, debug: bool = False):
 
 
 if __name__ == '__main__':
-    app.run(port=args.port, debug=args.debug)
+    run_server(port=args.port, debug=args.debug)
