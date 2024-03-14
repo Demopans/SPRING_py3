@@ -10,7 +10,8 @@ function print_help() {
     echo "  -h, --help       Show this help message and exit."
     echo ""
     echo "Examples:"
-    echo "  ./start_server.sh -d          Start the server in debug mode."
+    echo "  ./start_server.sh             Start the server on the default port."
+    echo "  ./start_server.sh -d          Start the server in debug mode on default port."
     echo "  ./start_server.sh -p 8000     Start the server on port 8000."
     echo "  ./start_server.sh -d -p 8000  Start the server in debug mode on port 8000."
 }
