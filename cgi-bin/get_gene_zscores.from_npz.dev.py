@@ -9,10 +9,6 @@ from get_stdin_data import get_stdin_data
 
 data, running_cgi = get_stdin_data()
 
-cwd = os.getcwd()
-if cwd.endswith('cgi-bin'):
-    os.chdir('../')
-
 def update_log(fname, logdat, overwrite=False):
 	if overwrite:
 		o = open(fname, 'w')
@@ -25,16 +21,15 @@ def strfloat(x):
     return "%.3f" %x
 
 
-base_dir = data.get('base_dir')
-sub_dir = data.get('sub_dir')
+base_dir = data.get_required_dir('base_dir')
+sub_dir = data.get_required_dir('sub_dir')
 sel_filter = data.get('selected_cells')
 comp_filter = data.get('compared_cells')
 
-#logf = sub_dir + '/tmplogenrich'
-logf = 'tmplogenrich'
+logf = os.path.join(sub_dir, 'tmplogenrich')
 update_log(logf, 'Enrichment log:', True)
 
-gene_list = np.loadtxt(base_dir + '/genes.txt', dtype=str,
+gene_list = np.loadtxt(os.path.join(base_dir, 'genes.txt'), dtype=str,
                        delimiter='\t', comments=None)
 
 if str(sel_filter) != "None":
@@ -52,17 +47,17 @@ else:
 update_log(logf, '%i selected cells; %i compared cells' %(len(sel_filter), len(comp_filter)), False)
 
 t0 = time.time()
-color_stats = json.load(open(sub_dir + '/color_stats.json', 'r'))
+color_stats = json.load(open(os.path.join(sub_dir, 'color_stats.json'), 'r'))
 t1 = time.time()
 update_log(logf, 'got color stats -- %.3f' %(t1-t0))
 
 t0 = time.time()
-E = ssp.load_npz(base_dir + '/counts_norm.npz')
+E = ssp.load_npz(os.path.join(base_dir, 'counts_norm.npz'))
 t1 = time.time()
 update_log(logf, 'loaded npz -- %.3f' %(t1-t0))
 
 t0 = time.time()
-cell_filter = np.load(sub_dir + '/cell_filter.npy')
+cell_filter = np.load(os.path.join(sub_dir, 'cell_filter.npy'))
 t1 = time.time()
 update_log(logf, 'got cell filter -- %.3f' %(t1-t0))
 

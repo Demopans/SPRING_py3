@@ -14,22 +14,38 @@ def dir_exists(path: str) -> bool:
 
 
 # Check if given path leads to existing directory (including in this script's
-# parent directory). If it does, return path which exists. Otherwise errors out.
+# dir and parent). If it does, return path which exists. Otherwise errors out.
 def validate_dir_path_exists(path: str) -> str:
+  # First we check if we can find this dir with the given path
   if dir_exists(path):
     return path
+
+  # Second priority is checking the parent directory: the SPRING directory
   _path = os.path.join(parent_dir, path)
   if dir_exists(_path):
     return _path
+
+  # Finally check if the path leads to a directory from this script's directory
+  _path = os.path.join(this_dir, path)
+  if dir_exists(_path):
+    return _path
+
+  # We've checked everywhere we should, but we need this path to exist
   raise RuntimeError(f"Unable to validate path exists as dir: {path}")
 
 
 def validate_path_exists(path: str) -> str:
   if os.path.exists(path):
     return path
+
   _path = os.path.join(parent_dir, path)
   if os.path.exists(_path):
     return _path
+
+  _path = os.path.join(this_dir, path)
+  if os.path.exists(_path):
+    return _path
+
   raise RuntimeError(f"Unable to validate path exists: {path}")
 
 

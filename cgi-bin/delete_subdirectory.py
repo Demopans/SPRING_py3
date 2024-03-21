@@ -1,28 +1,20 @@
 #!/usr/bin/env python3
 import os
 
-from get_stdin_data import get_stdin_data
+from shutil import move
+from get_stdin_data import get_stdin_data, dir_exists
 
 form, running_cgi = get_stdin_data()
-
-cwd = os.getcwd()
-if cwd.endswith('cgi-bin'):
-    os.chdir('../')
 
 if running_cgi:
     print("Content-Type: text/html")
     print()
 
-# Get filename here.
-proj_dir = form.get('base_dir').strip('\n')
-sub_dir = form.get('sub_dir').strip('\n')
+base_dir = form.get_required_dir('base_dir')
+sub_dir = form.get_required('sub_dir')
 
-if not os.path.exists(proj_dir+'/archive'):
-	os.system('mkdir '+proj_dir+'/archive')
+archive_path = os.path.join(base_dir, 'archive')
+if not dir_exists(archive_path):
+	os.system('mkdir '+archive_path)
 
-from shutil import move
-move(proj_dir + '/' + sub_dir, proj_dir + '/archive/' + sub_dir)
-
-
-
-
+move(os.path.join(base_dir, sub_dir), os.path.join(archive_path, sub_dir))
