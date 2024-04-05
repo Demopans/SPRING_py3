@@ -9,9 +9,7 @@ from wolkit import *
 import pickle
 import datetime
 
-cwd = os.getcwd()
-if cwd.endswith('cgi-bin'):
-    os.chdir('../')
+from get_stdin_data import validate_dir_path_exists
 
 creation_time = datetime.datetime.now()
 
@@ -67,7 +65,7 @@ def send_confirmation_email(user_email, subset_name, path):
 params_dict = pickle.load(open(sys.argv[1], 'rb'))
 
 extra_filter = params_dict['extra_filter']
-base_dir = params_dict['base_dir']
+base_dir = validate_dir_path_exists(params_dict['base_dir'])
 current_dir = params_dict['current_dir']
 user_email = params_dict['user_email']
 rand_suffix = params_dict['rand_suffix']
@@ -76,7 +74,8 @@ my_url_origin = params_dict['my_url_origin']
 
 
 #outdir = current_dir + '/selected_downloads/tmp_download_' + rand_suffix + '/'
-outdir = "downloads/" + selection_name + '.' + rand_suffix + '/'
+outdir = os.path.join(base_dir, current_dir, "downloads",
+                      selection_name + '.' + rand_suffix)
 #os.makedirs(outdir)
 
 # logf = outdir + 'logdownloadselect.txt'
@@ -85,13 +84,14 @@ outdir = "downloads/" + selection_name + '.' + rand_suffix + '/'
 #######################
 # Load data
 
-cell_filter = np.load(current_dir + '/cell_filter.npy')[extra_filter]
-gene_list = np.loadtxt(base_dir + '/genes.txt', dtype=str,
+cell_filter = np.load(os.path.join(base_dir, current_dir, 'cell_filter.npy'))[
+    extra_filter]
+gene_list = np.loadtxt(os.path.join(base_dir, 'genes.txt'), dtype=str,
                        delimiter='\t', comments=None)
 
 t0 = time.time()
 # update_log_html(logf, 'Loading counts data...', True)
-E = ssp.load_npz(base_dir + '/counts_norm.npz')
+E = ssp.load_npz(os.path.join(base_dir, 'counts_norm.npz'))
 E = E[cell_filter,:]
 if not ssp.isspmatrix_csc(E):
     E = E.tocsc()
@@ -108,7 +108,7 @@ print(E.shape)
 #################
 # Save expression matrix as csv
 print('Saving expression')
-o = open(outdir + 'expr.csv', 'w')
+o = open(os.path.join(outdir, 'expr.csv'), 'w')
 t0 = time.time()
 for iG, g in enumerate(gene_list):
     if iG % 500 == 0:
@@ -119,24 +119,27 @@ for iG, g in enumerate(gene_list):
     o.write(g + ',' + ','.join(map(str, counts)) + '\n')
 
 o.close()
-os.system('gzip "' + outdir + 'expr.csv"')
+os.system('gzip "' + os.path.join(outdir, 'expr.csv') + '"')
 
 
 # save coordinates
 print('Saving coordinates')
-coords = np.loadtxt(current_dir + '/coordinates.txt',
+coords = np.loadtxt(os.path.join(base_dir, current_dir, 'coordinates.txt'),
                     delimiter=',', comments=None)[:, 1:]
 coords = coords[extra_filter,:]
-np.savetxt(outdir + 'coordinates.csv', np.hstack((np.arange(coords.shape[0])[:,None], coords)), fmt="%i,%.5f,%.5f")
+np.savetxt(os.path.join(outdir, 'coordinates.csv'), np.hstack(
+    (np.arange(coords.shape[0])[:, None], coords)), fmt="%i,%.5f,%.5f")
 
 # save original cell indices of selected cells
 print('Saving cell indices')
-np.savetxt(outdir + 'original_cell_indices.txt', cell_filter, fmt='%i')
+np.savetxt(os.path.join(outdir, 'original_cell_indices.txt'),
+           cell_filter, fmt='%i')
 
 # save extra categorical variables
 print('Saving categorical data')
-categ = json.load(open(current_dir + '/categorical_coloring_data.json'))
-o = open(outdir + 'cell_groupings.csv', 'w')
+categ = json.load(
+    open(os.path.join(base_dir, current_dir, 'categorical_coloring_data.json')))
+o = open(os.path.join(outdir, 'cell_groupings.csv'), 'w')
 for k in categ:
     v = categ[k]['label_list']
     v_filt = [v[i] for i in extra_filter]
@@ -145,8 +148,8 @@ o.close()
 
 # save extra continuous variables
 print('Saving continuous data')
-o = open(outdir + 'custom_colors.csv', 'w')
-with open(current_dir + '/color_data_gene_sets.csv') as f:
+o = open(os.path.join(outdir, 'custom_colors.csv'), 'w')
+with open(os.path.join(base_dir, current_dir, 'color_data_gene_sets.csv')) as f:
     for l in f:
         cols = l.strip('\n').split(',')
         varname = cols[0]
@@ -158,7 +161,8 @@ o.close()
 
 
 ####################
-outdir_strip = outdir.strip('/')
-os.system('cd downloads; tar cfz "' + selection_name + '.' + rand_suffix + '.tar.gz" "' + selection_name + '.' + rand_suffix + '"')
+tar_name = outdir + '.tar.gz'
+os.system('tar cfz "' + tar_name + '" "' + outdir + '"')
 
-send_confirmation_email(user_email, selection_name, my_url_origin + '/' + outdir_strip + '.tar.gz')
+send_confirmation_email(user_email, selection_name,
+                        my_url_origin + '/' + tar_name)

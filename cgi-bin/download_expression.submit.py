@@ -20,8 +20,8 @@ if cwd.endswith('cgi-bin'):
 # CGI
 do_the_rest = True
 
-base_dir = data.get('base_dir')
-current_dir = data.get('current_dir')
+base_dir = data.get_required_dir('base_dir')
+current_dir = data.get_required('current_dir')
 extra_filter = data.get('selected_cells')
 user_email = data.get('email')
 selection_name = data.get('selection_name')
