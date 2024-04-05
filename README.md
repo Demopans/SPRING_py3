@@ -1,4 +1,4 @@
-# SPRING_dev
+# SPRING_py3
 
 ## Conda Environment and Installing Python libraries
 
