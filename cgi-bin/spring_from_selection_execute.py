@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 def sparse_var(E, axis=0):
     mean_gene = E.mean(axis=axis).A.squeeze()
@@ -132,7 +132,8 @@ def execute_spring(param_filename):
     cell_filter = np.load(current_dir + '/cell_filter.npy')[extra_filter]
     np.save(new_dir + '/cell_filter.npy', cell_filter)
     np.savetxt(new_dir + '/cell_filter.txt', cell_filter, fmt='%i')
-    gene_list = np.loadtxt(base_dir + '/genes.txt', dtype=str, delimiter='\t', comments="")
+    gene_list = np.loadtxt(base_dir + '/genes.txt',
+                           dtype=str, delimiter='\t', comments=None)
     prefix_map = {}
     for g in gene_list: prefix_map[g.split()[0]] = g
     for g in gene_list: prefix_map[g.split()[-1]] = g
@@ -182,13 +183,13 @@ def execute_spring(param_filename):
     f = open(current_dir + '/color_data_gene_sets.csv', 'r')
     for l in f:
         cols = l.strip('\n').split(',')
-        custom_colors[cols[0]] = map(float, np.array(cols[1:])[extra_filter])
-    for k,v in custom_colors.items():
+        custom_colors[cols[0]] = list(map(float, np.array(cols[1:])[extra_filter]))
+    for k,v in list(custom_colors.items()):
         color_stats[k] = tuple(map(float,(0,1,np.min(v),np.max(v)+.01,np.percentile(v,99))))
     with open(new_dir+'/color_stats.json','w') as f:
         f.write(json.dumps(color_stats,indent=4, sort_keys=True))#.decode('utf-8'))
     with open(new_dir+'/color_data_gene_sets.csv','w') as f:
-        for k,v in custom_colors.items():
+        for k,v in list(custom_colors.items()):
             f.write(k + ',' + ','.join(map(str, v)) + '\n')
     t1 = time.time()
     update_log(timef, 'Saved color stats -- %.2f' %(t1-t0))
@@ -229,7 +230,7 @@ def execute_spring(param_filename):
         gene_filter = np.array([i for i in gene_filter if gene_list[i] in custom_genes])
     
     if len(gene_filter)==0: 
-    	print 'Error: No genes survived filtering'
+    	print('Error: No genes survived filtering')
     	sys.exit()
     
     t1 = time.time()
@@ -287,7 +288,7 @@ def execute_spring(param_filename):
     t0 = time.time()
     update_log_html(logf, 'Getting force layout...')
     G = nx.Graph()
-    G.add_nodes_from(range(E.shape[0]))
+    G.add_nodes_from(list(range(E.shape[0])))
     G.add_edges_from(links)
 
     forceatlas2 = ForceAtlas2(
@@ -341,9 +342,9 @@ def execute_spring(param_filename):
         clone_map_dict = json.load(open(current_dir + '/clone_map.json'))
         extra_filter_map = {i:j for j,i in enumerate(extra_filter)}
         new_clone_map_dict = {}
-        for k, clone_map in clone_map_dict.items():
+        for k, clone_map in list(clone_map_dict.items()):
             new_clone_map = {}
-            for i,clone in clone_map.items():
+            for i,clone in list(clone_map.items()):
                 i = int(i)
                 new_clone = [extra_filter_map[j] for j in clone if j in extra_filter_map]
                 if i in extra_filter_map and len(new_clone) > 0:
@@ -355,7 +356,8 @@ def execute_spring(param_filename):
     ################
     # Save PCA, gene filter, total counts
     if os.path.exists(base_dir + '/total_counts.txt'):
-        total_counts = np.loadtxt(base_dir + '/total_counts.txt', comments="")[cell_filter]
+        total_counts = np.loadtxt(
+            base_dir + '/total_counts.txt', comments=None)[cell_filter]
         np.savez_compressed(new_dir + '/intermediates.npz', Epca = Epca, gene_filter = gene_filter, total_counts = total_counts)
     else:
         np.savez_compressed(new_dir + '/intermediates.npz', Epca = Epca, gene_filter = gene_filter)

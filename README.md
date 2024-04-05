@@ -1,25 +1,51 @@
-### Installing Python libraries
+# SPRING_dev
 
-To run SPRING Viewer locally, make sure Python 2.7 is installed (and that it's your active version). You will also need the following Python libraries:  
+## Conda Environment and Installing Python libraries
 
-`scikit-learn`  
-`numpy`  
-`scipy`  
-`matplotlib`  
-`h5py`  
-`networkx`  
-`fa2`  
-`python-louvain`
+To run SPRING Viewer locally, you'll need to set up a conda environment for it and install its dependencies:
 
-We recommend Anaconda to manage your Python libraries. You can download it here (be sure to get the Python 2.7 version):   https://conda.io/miniconda.html. Libraries can then be installed using the command `conda`. To do so, open Terminal (Mac) or Anaconda Prompt (Windows) and enter:  
+`numpy`
+`scipy`
+`matplotlib`
+`h5py`
+`flask`
+`networkx`
+`scikit-learn` (imported as `sklearn`)
+`python-louvain` (imported as `community`)
+`fa2`
 
-`conda install scikit-learn numpy scipy matplotlib h5py`
+We recommend Anaconda (specifically Miniconda) to manage your Python libraries. You can download it here: https://conda.io/miniconda.html. 
 
-The remaining libraries can be installed using `pip`. Note that if you're a Windows user, you'll first need to install Microsoft Visual C++ compiler for Python (available from http://aka.ms/vcpython27). Enter the following into Terminal or Anaconda Prompt:  
+Create a Python 3 conda environment for SPRING viewer to run in. For example, to create a conda environment called `spring_viewer` with Python 3.12, you can open Terminal (Mac) or Anaconda Prompt (Windows) and enter:
 
-`pip install networkx fa2 python-louvain`
+`conda create -n spring_viewer python=3.12`
 
-### Setting up a SPRING data directory
+Activate your new conda environment by running:
+
+`conda activate spring_viewer`
+
+Most of the libraries SPRING needs can then be installed by running:
+
+`conda install numpy scipy matplotlib h5py flask networkx scikit-learn`
+
+Also run:
+
+`pip install annoy python-louvain`
+
+The `fa2` library has to be installed from modified source code. To do so, you'll create a folder with the source code by running these commands:
+
+```bash
+git clone https://github.com/bhargavchippada/forceatlas2
+cd forceatlas2
+```
+
+You then need to modify the `setup.py` file in that folder as described in [this pull request](https://github.com/bhargavchippada/forceatlas2/pull/46). To do so, copy the contents of `fa2_patched_setup.py` from this folder to `setup.py` in the `forceatlas2` folder. Do not change the name of `setup.py`. Once you've copied over the changes, run the following command while in the `forceatlas2` folder:
+
+```bash
+pip install . --user
+```
+
+## Setting up a SPRING data directory
 See the example notebooks:  
 [Hematopoietic progenitor FACS subpopulations](./data_prep/spring_example_HPCs.ipynb)  
 [Mature blood cells (10X Genomics 4k PBMCs)](./data_prep/spring_example_pbmc4k.ipynb)  
@@ -45,14 +71,15 @@ Each subdirectory should contain:
 `graph_data.json`  
 `run_info.json`  
 
-### Running SPRING Viewer
+## Running SPRING Viewer
 
 1. Open Terminal (Mac) or Anaconda Prompt (Windows) and change directories (`cd`) to the directory containing this README file (`SPRING_dev/`). 
-2. Start a local server by entering the following: `python -m CGIHTTPServer 8000`
-3. Open web browser (preferably Chrome; best to use incognito mode to ensure no cached data is used).
-4. View data set by navigating to corresponding URL: http://localhost:8000/springViewer_1_6_dev.html?path_to/main/subplot. In the example above, if you wanted to view a SPRING plot called `FullDataset_v1` in the main directory `10X_PBMCs_Signac_GitHub`, then you would navigate to http://localhost:8000/springViewer_1_6_dev.html?datasets/10X_PBMCs_Signac_GitHub/FullDataset_v1
+2. Activate your conda environment for running SPRING; you can list all your conda environments by running `conda env list` if you need a reminder of what it's called. As an example, if your environment is called `spring_viewer`, you can activate it by entering the following: `conda activate spring_viewer`
+3. Start a local server by entering the following: `./start_server.sh`
+4. Open web browser (preferably Chrome; best to use incognito mode to ensure no cached data is used).
+5. View data set by navigating to corresponding URL: http://localhost:8000/springViewer_1_6_dev.html?path_to/main/subplot. In the example above, if you wanted to view a SPRING plot called `FullDataset_v1` in the main directory `10X_PBMCs_Signac_GitHub`, then you would navigate to http://localhost:8000/springViewer_1_6_dev.html?datasets/10X_PBMCs_Signac_GitHub/FullDataset_v1
 
-### Signac
+## Signac
 
 To classify cellular phenotypes in single cell data, [SignacX](https://cran.r-project.org/web/packages/SignacX/) was integrated with the files output by SPRING (specifically, the matrix.mtx, genes.txt, edges.csv and categorical_coloring_data.json files), such that SPRING data can be classified by Signac in R with only a few lines of code. First, install SignacX in R:
 

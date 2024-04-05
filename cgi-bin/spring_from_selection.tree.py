@@ -1,17 +1,14 @@
 #!/groups/kleintools/py27/bin/python
-
-import cgi
-import cgitb
-cgitb.enable()  # for troubleshooting
-print "Content-Type: text/html"
-print
-
 import os
 import pickle
 import numpy as np
 import subprocess
 import json
 import numpy as np
+
+from get_stdin_data import get_stdin_data
+
+data, running_cgi = get_stdin_data()
 
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
@@ -20,14 +17,17 @@ if cwd.endswith('cgi-bin'):
 # CGI
 do_the_rest = True
 
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-current_dir_short = data.getvalue('current_dir').strip('/')
-new_dir_short = data.getvalue('new_dir').strip('/')
+if running_cgi:
+    print("Content-Type: text/html")
+    print()
+
+base_dir = data.get('base_dir')
+current_dir_short = data.get('current_dir').strip('/')
+new_dir_short = data.get('new_dir').strip('/')
 
 # ERROR HANDLING HERE
-selected_clusters = data.getvalue('selected_clusters')
-compared_clusters = data.getvalue('compared_clusters')
+selected_clusters = data.get('selected_clusters')
+compared_clusters = data.get('compared_clusters')
 current_dir = base_dir + current_dir_short
 new_dir = base_dir + new_dir_short
 this_url = 'https://kleintools.hms.harvard.edu/tools/springViewer_1_6_dev.html'
@@ -58,7 +58,7 @@ if len(found_bad) > 0:
 
 # ERROR HANDLING
 try:
-    user_email = data.getvalue('email')
+    user_email = data.get('email')
     if "@" not in user_email:
         all_errors.append('Enter a valid <font color="red">email address</font>.<br>')
         do_the_rest = False
@@ -67,19 +67,19 @@ except:
     do_the_rest = False
 
 try:
-    min_cells = int(data.getvalue('minCells'))
+    min_cells = int(data.get('minCells'))
 except:
     all_errors.append('Enter a number for <font color="red">min expressing cells</font>.<br>')
     do_the_rest = False
 
 try:
-    min_counts = float(data.getvalue('minCounts'))
+    min_counts = float(data.get('minCounts'))
 except:
     all_errors.append('Enter a number for <font color="red">min number of UMIs</font>.<br>')
     do_the_rest = False
 
 try:
-    min_vscore_pctl = float(data.getvalue('varPctl'))
+    min_vscore_pctl = float(data.get('varPctl'))
     if min_vscore_pctl > 100 or min_vscore_pctl < 0:
         all_errors.append('Enter a value 0-100 for <font color="red">gene variability</font>.<br>')
         do_the_rest = False
@@ -88,7 +88,7 @@ except:
     do_the_rest = False
 
 try:
-    num_pc = int(data.getvalue('numPC'))
+    num_pc = int(data.get('numPC'))
     if num_pc < 1:
         all_errors.append('Enter an integer >0 for <font color="red">number of principal components</font>.<br>')
         do_the_rest = False
@@ -97,7 +97,7 @@ except:
     do_the_rest = False
 
 try:
-    k_neigh = int(data.getvalue('kneigh'))
+    k_neigh = int(data.get('kneigh'))
     if k_neigh < 1:
         all_errors.append('Enter an integer >0 for <font color="red">number of nearest neighbors</font>.<br>')
         do_the_rest = False
@@ -106,7 +106,7 @@ except:
     do_the_rest = False
 
 try:
-    num_fa2_iter = int(data.getvalue('nIter'))
+    num_fa2_iter = int(data.get('nIter'))
     if num_fa2_iter < 1:
         all_errors.append('Enter an integer >0 for <font color="red">number of force layout iterations</font>.<br>')
         do_the_rest = False
@@ -115,21 +115,21 @@ except:
     do_the_rest = False
 
 try:
-    description = data.getvalue('description')
+    description = data.get('description')
 except:
     description = ''
 
 try:
-    animate = data.getvalue('animate')
+    animate = data.get('animate')
 except:
     animate = 'No'
 
 
 if not do_the_rest:
     #os.rmdir(new_dir)
-    print 'Invalid input!<br>'
+    print('Invalid input!<br>')
     for err in all_errors:
-        print '>  %s' %err
+        print('>  %s' %err)
 
 else:
     try:
@@ -172,9 +172,9 @@ else:
         pickle.dump(params_dict, params_file, -1)
         params_file.close()
 
-        print 'Everything looks good. Now running...<br>'
-        print 'This could take a minute or two. Feel free to exit.<br>'
-        print 'You\'ll receive an email when your dataset is ready.<br>'
+        print('Everything looks good. Now running...<br>')
+        print('This could take a minute or two. Feel free to exit.<br>')
+        print('You\'ll receive an email when your dataset is ready.<br>')
 
         o = open(new_dir + '/lognewspring2.txt', 'w')
         o.write('Started processing<br>\n')
@@ -183,5 +183,5 @@ else:
         subprocess.call(["cgi-bin/new_spring_submit.sh", new_dir])
         
     except:
-        print 'Error starting processing!<br>'
+        print('Error starting processing!<br>')
 

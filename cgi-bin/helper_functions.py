@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import numpy as np, json
 
@@ -43,7 +43,7 @@ def get_knn_edges(dmat, k):
 			if i != j:
 				ii,jj = tuple(sorted([i,j]))
 				edge_dict[(ii,jj)] = dmat[i,j]
-	return edge_dict.keys()
+	return list(edge_dict.keys())
 
 
 

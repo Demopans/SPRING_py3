@@ -38,13 +38,13 @@ def text_to_expr(fname,delim='\t',start_row=0,start_column=0,update=0,data_type=
             elif data_type == 'float':
                 expr += [[float(x) for x in l[start_column:]]]
             else:
-                print 'Unrecognized data type. Must be "int" or "float".'
+                print('Unrecognized data type. Must be "int" or "float".')
                 return
 
         ct += 1
         if update > 0:
             if ct % update == 0:
-                print ct
+                print(ct)
 
     f.close()
 
@@ -69,10 +69,10 @@ def load_genes(fname):
 
 def load_counts(prefix, save_as_npy = True):
     if os.path.isfile(prefix + '.counts.npy.gz'):
-        print 'loading from npy file'
+        print('loading from npy file')
         dat = read_npy_gzip(prefix + '.counts.npy.gz')
     else:
-        print 'loading from tsv file'
+        print('loading from tsv file')
         dat = np.array(text_to_expr(prefix + '.counts.tsv.gz','\t',1,1))
         if save_as_npy:
             np.save(prefix + '.counts.npy', dat)
@@ -103,7 +103,7 @@ def load_pickle(fname):
 
 ########## GENE FILTERING
 def filter_dict(d, filt):
-    for k,v in d.items():
+    for k,v in list(d.items()):
         if k != 'meta':
             if len(v.shape) == 1:
                 d[k] = v[filt]
@@ -200,7 +200,7 @@ def tot_counts_norm(E, exclude_dominant_frac = 1):
         tots = np.sum(E, axis = 1)
         included = np.all((E / tots[:,None]) < exclude_dominant_frac, axis = 0)
         tots_use = np.sum(E[:,included], axis = 1)
-        print 'Excluded %i genes from normalization' %(np.sum(~included))
+        print('Excluded %i genes from normalization' %(np.sum(~included)))
 
     w = np.mean(tots_use)/tots_use
     Enorm = E * w[:,None]
@@ -294,7 +294,7 @@ def text_to_sparse(fname,delim='\t',start_row=0,start_column=0,update=0,data_typ
         elif row_ix >= start_row:
             if get_barcodes:
                 barcode_list.append(dat[0])
-            rowdat = np.array(map(data_type, dat[start_column:]))
+            rowdat = np.array(list(map(data_type, dat[start_column:])))
             col_ix = np.nonzero(rowdat)[0]
             X_col.extend(col_ix)
             X_row.extend([row_ix - start_row] * len(col_ix))
@@ -314,7 +314,7 @@ def text_to_sparse(fname,delim='\t',start_row=0,start_column=0,update=0,data_typ
 
     if fname.endswith('.gz'):
         os.system('rm ' + new_fname)
-    print 'Loading took %.3f seconds' %(time.time() - t0)
+    print('Loading took %.3f seconds' %(time.time() - t0))
 
     return output
 
@@ -330,7 +330,7 @@ def tot_counts_norm_sparse(E, exclude_dominant_frac = 1, included = [], target_m
             wtmp.setdiag(1. / tots)
             included = np.asarray(~(((wtmp * E) > exclude_dominant_frac).sum(axis=0) > 0))[0,:]
             tots_use = E[:,included].sum(axis = 1)
-            print 'Excluded %i genes from normalization' %(np.sum(~included))
+            print('Excluded %i genes from normalization' %(np.sum(~included)))
     else:
         tots_use = E[:,included].sum(axis = 1)
 
@@ -373,9 +373,9 @@ def remove_corr_genes_sparse(E, gene_list, bad_gene_idx_list, test_gene_idx, min
             c[iG],_ = scipy.stats.pearsonr(tmp, E[:,test_gene_idx[iG]].A.squeeze())
 
         exclude_ix.extend([test_gene_idx[i] for i in range(len(test_gene_idx)) if (c[i]) >= min_corr])
-        print len(exclude_ix)
+        print(len(exclude_ix))
     exclude_ix = np.array(exclude_ix)
-    print np.array(gene_list)[exclude_ix]
+    print(np.array(gene_list)[exclude_ix])
     return np.array([g for g in test_gene_idx if g not in exclude_ix], dtype=int)
 
 def get_knn_graph2(X, k=5, dist_metric='euclidean',approx=False):
@@ -385,10 +385,10 @@ def get_knn_graph2(X, k=5, dist_metric='euclidean',approx=False):
             from annoy import AnnoyIndex
         except:
             approx = False
-            print 'Could not find library "annoy" for approx. nearest neighbor search.'
-            print 'Using sklearn instead.'
+            print('Could not find library "annoy" for approx. nearest neighbor search.')
+            print('Using sklearn instead.')
     if approx:
-        print 'Using approximate nearest neighbor search.'
+        print('Using approximate nearest neighbor search.')
         # Approximate KNN using Annoy
         if dist_metric == 'cosine':
             dist_metric = 'angular'
@@ -396,7 +396,7 @@ def get_knn_graph2(X, k=5, dist_metric='euclidean',approx=False):
         ncell = X.shape[0]
         annoy_index = AnnoyIndex(npc, metric=dist_metric)
         t0 = time.time()
-        for i in xrange(ncell):
+        for i in range(ncell):
             annoy_index.add_item(i, list(X[i,:]))
         annoy_index.build(10) # 10 trees
         t1 = time.time() - t0
@@ -404,7 +404,7 @@ def get_knn_graph2(X, k=5, dist_metric='euclidean',approx=False):
 
         t0 = time.time()
         knn = []
-        for iCell in xrange(ncell):
+        for iCell in range(ncell):
             knn.append(annoy_index.get_nns_by_item(iCell, k + 1)[1:])
         knn = np.array(knn, dtype=int)
         t1 = time.time() - t0
@@ -425,7 +425,7 @@ def get_knn_graph2(X, k=5, dist_metric='euclidean',approx=False):
             links.add(tuple(sorted((i,j))))
 
     t11 = time.time() - t00
-    print 'kNN built in %.5f sec' %(t11)
+    print('kNN built in %.5f sec' %(t11))
     return list(links), knn
 
 
@@ -567,13 +567,13 @@ def run_all_spring_sparse(E, gene_list, sample_name, save_dir = './', base_ix = 
 
     tot_counts_final = np.sum(E, axis=1).A[:,0]
     if normalize:
-        print 'Normalizing'
+        print('Normalizing')
         E = tot_counts_norm_sparse(E, exclude_dominant_frac = exclude_dominant_frac)[0]
 
     if len(precomputed_pca) == 0:
         if len(gene_filter) == 0:
             # Get gene stats (above Poisson noise, i.e. V-scores)
-            print 'Filtering genes'
+            print('Filtering genes')
             Vscores, CV_eff, CV_input, gene_ix, mu_gene, FF_gene, a, b = get_vscores_sparse(E[base_ix, :])
 
             ix2 = Vscores>0
@@ -587,19 +587,19 @@ def run_all_spring_sparse(E, gene_list, sample_name, save_dir = './', base_ix = 
 
             ix = (((E[:,gene_ix] >= min_counts).sum(0).A.squeeze() >= min_cells) & (np.log(Vscores) >= min_log_vscore))
             gene_filter = gene_ix[ix]
-            print 'Using %i genes' %(len(gene_filter))
+            print('Using %i genes' %(len(gene_filter)))
 
             if len(exclude_corr_genes) > 0:
                 seed_ix_list = []
                 for l in exclude_corr_genes:
                     seed_ix_list.append(np.array([i for i in range(len(gene_list)) if gene_list[i] in l], dtype=int))
                 gene_filter = remove_corr_genes_sparse(E, gene_list, seed_ix_list, gene_filter, min_corr = exclude_gene_corr)
-                print 'Now using %i genes' %(len(gene_filter))
+                print('Now using %i genes' %(len(gene_filter)))
 
             # Remove user-excluded genes from consideration
             if len(exclude_gene_names) > 0:
                 keep_ix = np.array([ii for ii,gix in enumerate(gene_filter) if gene_list[gix] not in exclude_gene_names])
-                print 'Excluded %i genes' %(len(gene_filter)-len(keep_ix))
+                print('Excluded %i genes' %(len(gene_filter)-len(keep_ix)))
                 gene_filter = gene_filter[keep_ix]
 
             if show_vscore_plot:
@@ -615,25 +615,25 @@ def run_all_spring_sparse(E, gene_list, sample_name, save_dir = './', base_ix = 
                 plt.xlabel('log(mean)');
                 plt.ylabel('log(FF)');
         else:
-            print 'Using user-supplied gene filter'
+            print('Using user-supplied gene filter')
 
 
         # RUN PCA
         # if method == 'sparse': normalizes by stdev
         # if method == anything else: z-score normalizes
-        print 'Running PCA'
+        print('Running PCA')
         Epca = get_PCA_sparseInput(E[:,gene_filter], base_ix, numpc=num_pc, method=pca_method, normalize = pca_norm)
     else:
-        print 'Using user-supplied PCA coordinates'
+        print('Using user-supplied PCA coordinates')
         Epca = precomputed_pca
 
-    print 'Building kNN graph'
+    print('Building kNN graph')
 
     links, knn_graph = get_knn_graph2(Epca, k=k_neigh, dist_metric = dist_metric, approx=use_approxnn)
 
     if run_woublet:
         import doublet_detector as woublet
-        print 'Running woublet'
+        print('Running woublet')
         doub_score, doub_score_full, doub_labels = woublet.detect_doublets([], counts=tot_counts_final, doub_frac=dd_frac, k=dd_k, use_approxnn=dd_approx, precomputed_pca=Epca)
 
     if output_spring:
@@ -645,7 +645,7 @@ def run_all_spring_sparse(E, gene_list, sample_name, save_dir = './', base_ix = 
         # Build KNN graph and output SPRING format files
         save_path = save_dir + sample_name
 
-        print 'Saving SPRING files to %s' %save_path
+        print('Saving SPRING files to %s' %save_path)
         custom_colors['Total Counts'] = tot_counts_final
 
         if run_woublet:
@@ -662,7 +662,7 @@ def run_all_spring_sparse(E, gene_list, sample_name, save_dir = './', base_ix = 
 
     if run_force:
         import force
-        print 'Running FORCE'
+        print('Running FORCE')
         # Create random starting positions.
         starting_positions = np.random.random((Epca.shape[0], 2)) * 500
         force_graph = force.Force(starting_positions, links,
@@ -672,18 +672,18 @@ def run_all_spring_sparse(E, gene_list, sample_name, save_dir = './', base_ix = 
         while tick < max_tick:
             force_graph.fast_tick()
             if tick % 10 == 0:
-                print '%i / %i' %(tick, max_tick)
+                print('%i / %i' %(tick, max_tick))
 
             tick += 1
         coords = force_graph.current_positions
 
-        print 'Done!'
+        print('Done!')
         if len(precomputed_pca) == 0:
             return  E, Epca, knn_graph, gene_filter, coords
         else:
             return E, Epca, knn_graph, coords
 
-    print 'Done!'
+    print('Done!')
     if len(precomputed_pca) == 0:
         return E, Epca, knn_graph, gene_filter
     else:
@@ -707,13 +707,13 @@ def run_all_spring_sparse_hdf5(E, gene_list, sample_name, save_dir = './', base_
         tot_counts_final = np.sum(E, axis=1).A[:,0]
 
     if normalize:
-        print 'Normalizing'
+        print('Normalizing')
         E = tot_counts_norm_sparse(E, exclude_dominant_frac = exclude_dominant_frac)[0]
 
     if len(precomputed_pca) == 0:
         if len(gene_filter) == 0:
             # Get gene stats (above Poisson noise, i.e. V-scores)
-            print 'Filtering genes'
+            print('Filtering genes')
             Vscores, CV_eff, CV_input, gene_ix, mu_gene, FF_gene, a, b = get_vscores_sparse(E[base_ix, :])
 
             ix2 = Vscores>0
@@ -727,19 +727,19 @@ def run_all_spring_sparse_hdf5(E, gene_list, sample_name, save_dir = './', base_
 
             ix = (((E[:,gene_ix] >= min_counts).sum(0).A.squeeze() >= min_cells) & (np.log(Vscores) >= min_log_vscore))
             gene_filter = gene_ix[ix]
-            print 'Using %i genes' %(len(gene_filter))
+            print('Using %i genes' %(len(gene_filter)))
 
             if len(exclude_corr_genes) > 0:
                 seed_ix_list = []
                 for l in exclude_corr_genes:
                     seed_ix_list.append(np.array([i for i in range(len(gene_list)) if gene_list[i] in l], dtype=int))
                 gene_filter = remove_corr_genes_sparse(E, gene_list, seed_ix_list, gene_filter, min_corr = exclude_gene_corr)
-                print 'Now using %i genes' %(len(gene_filter))
+                print('Now using %i genes' %(len(gene_filter)))
 
             # Remove user-excluded genes from consideration
             if len(exclude_gene_names) > 0:
                 keep_ix = np.array([ii for ii,gix in enumerate(gene_filter) if gene_list[gix] not in exclude_gene_names])
-                print 'Excluded %i genes' %(len(gene_filter)-len(keep_ix))
+                print('Excluded %i genes' %(len(gene_filter)-len(keep_ix)))
                 gene_filter = gene_filter[keep_ix]
 
             if show_vscore_plot:
@@ -755,25 +755,25 @@ def run_all_spring_sparse_hdf5(E, gene_list, sample_name, save_dir = './', base_
                 plt.xlabel('log(mean)');
                 plt.ylabel('log(FF)');
         else:
-            print 'Using user-supplied gene filter'
+            print('Using user-supplied gene filter')
 
 
         # RUN PCA
         # if method == 'sparse': normalizes by stdev
         # if method == anything else: z-score normalizes
-        print 'Running PCA'
+        print('Running PCA')
         Epca = get_PCA_sparseInput(E[:,gene_filter], base_ix, numpc=num_pc, method=pca_method, normalize = pca_norm)
     else:
-        print 'Using user-supplied PCA coordinates'
+        print('Using user-supplied PCA coordinates')
         Epca = precomputed_pca
 
-    print 'Building kNN graph'
+    print('Building kNN graph')
 
     links, knn_graph = get_knn_graph2(Epca, k=k_neigh, dist_metric = dist_metric, approx=use_approxnn)
 
     if run_woublet:
         import doublet_detector as woublet
-        print 'Running woublet'
+        print('Running woublet')
         doub_score, doub_score_full, doub_labels = woublet.detect_doublets([], counts=tot_counts_final, doub_frac=dd_frac, k=dd_k, use_approxnn=dd_approx, precomputed_pca=Epca)
 
     if output_spring:
@@ -785,7 +785,7 @@ def run_all_spring_sparse_hdf5(E, gene_list, sample_name, save_dir = './', base_
         # Build KNN graph and output SPRING format files
         save_path = save_dir + sample_name
 
-        print 'Saving SPRING files to %s' %save_path
+        print('Saving SPRING files to %s' %save_path)
         custom_colors['Total Counts'] = tot_counts_final
 
         if run_woublet:
@@ -802,7 +802,7 @@ def run_all_spring_sparse_hdf5(E, gene_list, sample_name, save_dir = './', base_
 
     if run_force:
         import force
-        print 'Running FORCE'
+        print('Running FORCE')
         # Create random starting positions.
         starting_positions = np.random.random((Epca.shape[0], 2)) * 500
         force_graph = force.Force(starting_positions, links,
@@ -812,18 +812,18 @@ def run_all_spring_sparse_hdf5(E, gene_list, sample_name, save_dir = './', base_
         while tick < max_tick:
             force_graph.fast_tick()
             if tick % 10 == 0:
-                print '%i / %i' %(tick, max_tick)
+                print('%i / %i' %(tick, max_tick))
 
             tick += 1
         coords = force_graph.current_positions
 
-        print 'Done!'
+        print('Done!')
         if len(precomputed_pca) == 0:
             return  E, Epca, knn_graph, gene_filter, coords
         else:
             return E, Epca, knn_graph, coords
 
-    print 'Done!'
+    print('Done!')
     if len(precomputed_pca) == 0:
         return E, Epca, knn_graph, gene_filter
     else:
@@ -847,13 +847,13 @@ def run_all_spring_1_6(E, gene_list, sample_name, save_dir = './', base_ix = [],
         tot_counts_final = np.sum(E, axis=1).A[:,0]
 
     if normalize:
-        print 'Normalizing'
+        print('Normalizing')
         E = tot_counts_norm_sparse(E, exclude_dominant_frac = exclude_dominant_frac)[0]
 
     if len(precomputed_pca) == 0:
         if len(gene_filter) == 0:
             # Get gene stats (above Poisson noise, i.e. V-scores)
-            print 'Filtering genes'
+            print('Filtering genes')
             Vscores, CV_eff, CV_input, gene_ix, mu_gene, FF_gene, a, b = get_vscores_sparse(E[base_ix, :])
 
             ix2 = Vscores>0
@@ -867,19 +867,19 @@ def run_all_spring_1_6(E, gene_list, sample_name, save_dir = './', base_ix = [],
 
             ix = (((E[:,gene_ix] >= min_counts).sum(0).A.squeeze() >= min_cells) & (np.log(Vscores) >= min_log_vscore))
             gene_filter = gene_ix[ix]
-            print 'Using %i genes' %(len(gene_filter))
+            print('Using %i genes' %(len(gene_filter)))
 
             if len(exclude_corr_genes_list) > 0:
                 seed_ix_list = []
                 for l in exclude_corr_genes_list:
                     seed_ix_list.append(np.array([i for i in range(len(gene_list)) if gene_list[i] in l], dtype=int))
                 gene_filter = remove_corr_genes_sparse(E, gene_list, seed_ix_list, gene_filter, min_corr = exclude_corr_genes_minCorr)
-                print 'Now using %i genes' %(len(gene_filter))
+                print('Now using %i genes' %(len(gene_filter)))
 
             # Remove user-excluded genes from consideration
             if len(exclude_gene_names) > 0:
                 keep_ix = np.array([ii for ii,gix in enumerate(gene_filter) if gene_list[gix] not in exclude_gene_names])
-                print 'Excluded %i genes' %(len(gene_filter)-len(keep_ix))
+                print('Excluded %i genes' %(len(gene_filter)-len(keep_ix)))
                 gene_filter = gene_filter[keep_ix]
 
             if show_vscore_plot:
@@ -895,25 +895,25 @@ def run_all_spring_1_6(E, gene_list, sample_name, save_dir = './', base_ix = [],
                 plt.xlabel('log(mean)');
                 plt.ylabel('log(FF)');
         else:
-            print 'Using user-supplied gene filter'
+            print('Using user-supplied gene filter')
 
 
         # RUN PCA
         # if method == 'sparse': normalizes by stdev
         # if method == anything else: z-score normalizes
-        print 'Running PCA'
+        print('Running PCA')
         Epca = get_PCA_sparseInput(E[:,gene_filter], base_ix, numpc=num_pc, method=pca_method, normalize = pca_norm)
     else:
-        print 'Using user-supplied PCA coordinates'
+        print('Using user-supplied PCA coordinates')
         Epca = precomputed_pca
 
-    print 'Building kNN graph'
+    print('Building kNN graph')
 
     links, knn_graph = get_knn_graph2(Epca, k=k_neigh, dist_metric = dist_metric, approx=use_approxnn)
 
     if run_doub_detector:
         import doublet_detector as woublet
-        print 'Running woublet'
+        print('Running woublet')
         doub_score, doub_score_full, doub_labels = woublet.detect_doublets([], counts=tot_counts_final, doub_frac=dd_frac, k=dd_k, use_approxnn=dd_approx, precomputed_pca=Epca)
 
     if output_spring:
@@ -933,7 +933,7 @@ def run_all_spring_1_6(E, gene_list, sample_name, save_dir = './', base_ix = [],
             edgef.write('%i;%i\n' %(ee[0], ee[1]) )
         edgef.close()
 
-        print 'Saving SPRING files to %s' %save_path
+        print('Saving SPRING files to %s' %save_path)
         custom_colors['Total Counts'] = tot_counts_final
 
         if run_doub_detector:
@@ -953,10 +953,10 @@ def run_all_spring_1_6(E, gene_list, sample_name, save_dir = './', base_ix = [],
             from fa2 import ForceAtlas2
             import networkx as nx
 
-            print 'Running ForceAtlas2'
+            print('Running ForceAtlas2')
 
             G = nx.Graph()
-            G.add_nodes_from(range(Epca.shape[0]))
+            G.add_nodes_from(list(range(Epca.shape[0])))
             G.add_edges_from(list(links))
 
             forceatlas2 = ForceAtlas2(
@@ -1008,9 +1008,9 @@ def run_all_spring_1_6(E, gene_list, sample_name, save_dir = './', base_ix = [],
             else:
                 return E, Epca, knn_graph, positions
         except:
-            print 'Failed running ForceAtlas2!'
+            print('Failed running ForceAtlas2!')
 
-    print 'Done!'
+    print('Done!')
 
     if len(precomputed_pca) == 0:
         return E, Epca, knn_graph, gene_filter
@@ -1150,7 +1150,7 @@ def get_knn_edges(dmat, k, map_to_base_only, base_ix):
             ii,jj = tuple(sorted([i,j]))
             edge_dict[(ii,jj)] = dmat[i,j]
 
-    return edge_dict.keys()
+    return list(edge_dict.keys())
 
 
 def save_spring_dir(E,D,k,gene_list,project_directory, custom_colors={},cell_groupings={}, use_genes=[], map_to_base_only=False, base_ix=[], edges=[]):
@@ -1206,7 +1206,7 @@ def save_spring_dir(E,D,k,gene_list,project_directory, custom_colors={},cell_gro
         if len(use_genes) > 0: all_gene_colors = {g : E[:,i+II*j] for i,g in enumerate(gene_list[II*j:II*(j+1)]) if g in use_genes}
         else: all_gene_colors = {g : E[:,i+II*j] for i,g in enumerate(gene_list[II*j:II*(j+1)]) if np.mean(E[:,i+II*j])>0.05}
         write_color_tracks(all_gene_colors, fname)
-        all += all_gene_colors.keys()
+        all += list(all_gene_colors.keys())
 
     # Create and save a dictionary of color profiles to be used by the visualizer
     #print 'Color stats'
@@ -1217,7 +1217,7 @@ def save_spring_dir(E,D,k,gene_list,project_directory, custom_colors={},cell_gro
         max = np.max(E[:,i])
         centile = np.percentile(E[:,i],99.6)
         color_stats[gene_list[i]] = (mean,std,0,max,centile)
-    for k,v in custom_colors.items():
+    for k,v in list(custom_colors.items()):
         color_stats[k] = (0,1,np.min(v),np.max(v)+.01,np.percentile(v,99))
     json.dump(color_stats,open(project_directory+'/color_stats.json','w'),indent=4, sort_keys=True)
 
@@ -1225,7 +1225,7 @@ def save_spring_dir(E,D,k,gene_list,project_directory, custom_colors={},cell_gro
     # save cell labels
     #print 'Saving categorical color data'
     categorical_coloring_data = {}
-    for k,labels in cell_groupings.items():
+    for k,labels in list(cell_groupings.items()):
         label_colors = {l:frac_to_hex(float(i)/len(set(labels))) for i,l in enumerate(list(set(labels)))}
         categorical_coloring_data[k] = {'label_colors':label_colors, 'label_list':labels}
     json.dump(categorical_coloring_data,open(project_directory+'/categorical_coloring_data.json','w'),indent=4)
@@ -1274,7 +1274,7 @@ def save_spring_dir_sparse(E,D,k,gene_list,project_directory, custom_colors={},c
     # Build graph
     # print 'Building graph'
     if len(edges) == 0:
-        print 'Building graph'
+        print('Building graph')
         edges = get_knn_edges(D,k,map_to_base_only,base_ix)
 
     # save genesets
@@ -1307,7 +1307,7 @@ def save_spring_dir_sparse(E,D,k,gene_list,project_directory, custom_colors={},c
             max = np.max(E[:,i])
             centile = np.percentile(E[:,i],99.6)
             color_stats[gene_list[i]] = (mean,std,0,max,centile)
-    for k,v in custom_colors.items():
+    for k,v in list(custom_colors.items()):
         color_stats[k] = (0,1,np.min(v),np.max(v)+.01,np.percentile(v,99))
     json.dump(color_stats,open(project_directory+'/color_stats.json','w'),indent=4, sort_keys=True)
 
@@ -1315,7 +1315,7 @@ def save_spring_dir_sparse(E,D,k,gene_list,project_directory, custom_colors={},c
     # save cell labels
     #print 'Saving categorical color data'
     categorical_coloring_data = {}
-    for k,labels in cell_groupings.items():
+    for k,labels in list(cell_groupings.items()):
         label_colors = {l:frac_to_hex(float(i)/len(set(labels))) for i,l in enumerate(list(set(labels)))}
         categorical_coloring_data[k] = {'label_colors':label_colors, 'label_list':labels}
     json.dump(categorical_coloring_data,open(project_directory+'/categorical_coloring_data.json','w'),indent=4)
@@ -1337,7 +1337,7 @@ def save_spring_dir_sparse_hdf5(E,D,k,gene_list,project_directory, custom_colors
     # Build graph
     # print 'Building graph'
     if len(edges) == 0:
-        print 'Building graph'
+        print('Building graph')
         edges = get_knn_edges(D,k,map_to_base_only,base_ix)
 
     # save genesets
@@ -1355,7 +1355,7 @@ def save_spring_dir_sparse_hdf5(E,D,k,gene_list,project_directory, custom_colors
     for iG in range(E.shape[1]):
         pctls[iG] = np.percentile(E[:,iG].A, 99.6)
         color_stats[gene_list[iG]] = (means[iG], stdevs[iG], 0, maxes[iG], pctls[iG])
-    for k,v in custom_colors.items():
+    for k,v in list(custom_colors.items()):
         color_stats[k] = (0,1,np.min(v),np.max(v)+.01,np.percentile(v,99))
     json.dump(color_stats,open(project_directory+'/color_stats.json','w'),indent=4, sort_keys=True)
 
@@ -1363,7 +1363,7 @@ def save_spring_dir_sparse_hdf5(E,D,k,gene_list,project_directory, custom_colors
     # save cell labels
     #print 'Saving categorical color data'
     categorical_coloring_data = {}
-    for k,labels in cell_groupings.items():
+    for k,labels in list(cell_groupings.items()):
         label_colors = {l:frac_to_hex(float(i)/len(set(labels))) for i,l in enumerate(list(set(labels)))}
         categorical_coloring_data[k] = {'label_colors':label_colors, 'label_list':labels}
     json.dump(categorical_coloring_data,open(project_directory+'/categorical_coloring_data.json','w'),indent=4, sort_keys=True)
@@ -1378,14 +1378,14 @@ def save_spring_dir_sparse_hdf5(E,D,k,gene_list,project_directory, custom_colors
 #
 def save_cell_groupings_only(project_directory, cell_groupings, label_colors=None):
     categorical_coloring_data = {}
-    for k,labels in cell_groupings.items():
+    for k,labels in list(cell_groupings.items()):
         if label_colors==None: label_colors = {l:frac_to_hex(float(i)/len(set(labels))) for i,l in enumerate(list(set(labels)))}
         categorical_coloring_data[k] = {'label_colors':label_colors, 'label_list':labels}
     json.dump(categorical_coloring_data,open(project_directory+'/categorical_coloring_data.json','w'),indent=4, sort_keys = True)
 
 #========================================================================================#
 def row_sum_normalize(A):
-    print A.shape
+    print(A.shape)
     d = np.sum(A,axis=1)
     A = A / np.tile(d[:,None],(1,A.shape[1]))
     return A
@@ -1400,7 +1400,7 @@ def write_graph(n_nodes, edges,path):
 #========================================================================================#
 def write_color_tracks(ctracks, fname):
     out = []
-    for name,score in ctracks.items():
+    for name,score in list(ctracks.items()):
         line = name + ',' + ','.join(['%.3f' %x for x in score])
         out += [line]
     out = sorted(out,key=lambda x: x.split(',')[0])
@@ -1431,9 +1431,9 @@ def remove_corr_genes(E, gene_list, bad_gene_idx_list, test_gene_idx, min_corr =
             c[iG],_ = scipy.stats.pearsonr(tmp, E[:,test_gene_idx[iG]])
 
         exclude_ix.extend([test_gene_idx[i] for i in range(len(test_gene_idx)) if (c[i]) >= min_corr])
-        print len(exclude_ix)
+        print(len(exclude_ix))
     exclude_ix = np.array(exclude_ix)
-    print np.array(gene_list)[exclude_ix]
+    print(np.array(gene_list)[exclude_ix])
     return np.array([g for g in test_gene_idx if g not in exclude_ix], dtype=int)
 
 
@@ -1450,7 +1450,7 @@ def get_force(links, n):
     while tick < max_tick:
         force_graph.fast_tick()
         if tick % 10 == 0:
-            print '%i / %i' %(tick, max_tick)
+            print('%i / %i' %(tick, max_tick))
 
         tick += 1
     return force_graph.current_positions
@@ -1471,13 +1471,13 @@ def run_all_spring(E, gene_list, sample_name, save_dir = './', base_ix = [], nor
 
     tot_counts_final = np.sum(E, axis=1)
     if normalize:
-        print 'Normalizing'
+        print('Normalizing')
         E = tot_counts_norm(E, exclude_dominant_frac = exclude_dominant_frac)
 
     if len(precomputed_pca) == 0:
         if len(gene_filter) == 0:
             # Get gene stats (above Poisson noise, i.e. V-scores)
-            print 'Filtering genes'
+            print('Filtering genes')
             Vscores, CV_eff, CV_input, gene_ix, mu_gene, FF_gene, a, b = get_vscores(E[base_ix, :])
 
             ix2 = Vscores>0
@@ -1500,7 +1500,7 @@ def run_all_spring(E, gene_list, sample_name, save_dir = './', base_ix = [], nor
 
             ix = ((np.sum(E[:,gene_ix] >= min_counts,axis=0) >= min_cells) & (np.log(Vscores) >= min_log_vscore))
             gene_filter = gene_ix[ix]
-            print 'Using %i genes' %len(gene_filter)
+            print('Using %i genes' %len(gene_filter))
 
 
             if len(exclude_corr_genes) > 0:
@@ -1508,12 +1508,12 @@ def run_all_spring(E, gene_list, sample_name, save_dir = './', base_ix = [], nor
                 for l in exclude_corr_genes:
                     seed_ix_list.append(np.array([i for i in range(len(gene_list)) if gene_list[i] in l], dtype=int))
                 gene_filter = remove_corr_genes(E, gene_list, seed_ix_list, gene_filter, min_corr = exclude_gene_corr)
-                print 'Now using %i genes' %len(gene_filter)
+                print('Now using %i genes' %len(gene_filter))
 
             # Remove user-excluded genes from consideration
             if len(exclude_gene_names) > 0:
                 keep_ix = np.array([ii for ii,gix in enumerate(gene_filter) if gene_list[gix] not in exclude_gene_names])
-                print 'Excluded %i genes' %(len(gene_filter)-len(keep_ix))
+                print('Excluded %i genes' %(len(gene_filter)-len(keep_ix)))
                 gene_filter = gene_filter[keep_ix]
 
             if show_vscore_plot:
@@ -1529,28 +1529,28 @@ def run_all_spring(E, gene_list, sample_name, save_dir = './', base_ix = [], nor
                 plt.xlabel('log(mean)');
                 plt.ylabel('log(FF)');
         else:
-            print 'Using user-supplied gene filter'
+            print('Using user-supplied gene filter')
 
 
         # RUN PCA
         # if method == 'sparse': normalizes by stdev
         # if method == anything else: z-score normalizes
-        print 'Running PCA'
+        print('Running PCA')
         Epca = get_PCA(E[:,gene_filter], base_ix, numpc=num_pc, method=pca_method, normalize = pca_norm)
     else:
-        print 'Using user-supplied PCA coordinates'
+        print('Using user-supplied PCA coordinates')
         Epca = precomputed_pca
 
     if output_spring:
         # Calculate Euclidean distances in the PC space (will be used to build knn graph)
-        print 'Getting distance matrix'
+        print('Getting distance matrix')
         #D = get_distance_matrix(Epca)
         D = scipy.spatial.distance.squareform(pdist(Epca, dist_metric))
 
         # Build KNN graph and output SPRING format files
         save_path = save_dir + sample_name
 
-        print 'Saving SPRING files to %s' %save_path
+        print('Saving SPRING files to %s' %save_path)
         custom_colors['Total Counts'] = tot_counts_final
 
         if len(cell_groupings) > 0:
@@ -1564,7 +1564,7 @@ def run_all_spring(E, gene_list, sample_name, save_dir = './', base_ix = [], nor
     links, A, _ = get_knn_graph(Epca, k=k_neigh, dist_metric = dist_metric)
     if run_force:
         import force
-        print 'Running FORCE'
+        print('Running FORCE')
         # Create random starting positions.
         starting_positions = np.random.random((Epca.shape[0], 2)) * 500
         force_graph = force.Force(starting_positions, links,
@@ -1574,18 +1574,18 @@ def run_all_spring(E, gene_list, sample_name, save_dir = './', base_ix = [], nor
         while tick < max_tick:
             force_graph.fast_tick()
             if tick % 10 == 0:
-                print '%i / %i' %(tick, max_tick)
+                print('%i / %i' %(tick, max_tick))
 
             tick += 1
         coords = force_graph.current_positions
 
-        print 'Done!'
+        print('Done!')
         if len(precomputed_pca) == 0:
             return  E, Epca, A, gene_filter, coords
         else:
             return E, Epca, A, coords
 
-    print 'Done!'
+    print('Done!')
     if len(precomputed_pca) == 0:
         return E, Epca, A, gene_filter
     else:

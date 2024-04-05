@@ -97,7 +97,7 @@ def woublet(E=None, exp_doub_rate = 0.1, sim_doublet_ratio=3, k=50, use_approx_n
     
     # Check that input is valid
     if E is None and precomputed_pca is None:
-        print 'Please supply a counts matrix (E) or PCA coordinates (precomputed_pca)'
+        print('Please supply a counts matrix (E) or PCA coordinates (precomputed_pca)')
         return
     
     # Convert counts matrix to sparse format if necessary
@@ -121,11 +121,11 @@ def woublet(E=None, exp_doub_rate = 0.1, sim_doublet_ratio=3, k=50, use_approx_n
         PCdat = precomputed_pca
 
     # Simulate doublets
-    print 'Simulating doublets'
+    print('Simulating doublets')
     PCdat, doub_labels, parent_ix = simulate_doublets_from_pca(PCdat, total_counts=total_counts, sim_doublet_ratio=sim_doublet_ratio)
 
     # Calculate doublet scores using k-nearest-neighbor classifier
-    print 'Running KNN classifier'
+    print('Running KNN classifier')
     doub_score_obs, doub_score_sim = calculate_doublet_scores(PCdat, doub_labels, k=k, use_approx_nn=use_approx_nn, exp_doub_rate = exp_doub_rate)
     return doub_score_obs, doub_score_sim
 

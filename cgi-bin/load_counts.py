@@ -1,18 +1,23 @@
-#!/usr/bin/env python
-import cgi
-import cgitb
+#!/usr/bin/env python3
 import os
 
-cwd = os.getcwd()
-if cwd.endswith('cgi-bin'):
-    os.chdir('../')
+from get_stdin_data import get_stdin_data
 
-cgitb.enable()  # for troubleshooting
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-gene_list = [l.strip('\n') for l in open(base_dir + '/genes.txt')]
+data, running_cgi = get_stdin_data()
 
-print "Content-Type: text/plain"
-print
+this_directory = os.path.dirname(os.path.abspath(__file__))
+parent_directory = os.path.dirname(this_directory)
+
+base_dir = data.get('base_dir', '')
+base_dir = os.path.join(parent_directory, base_dir)
+
+genes_path = os.path.join(base_dir, 'genes.txt')
+
+gene_list = [l.strip('\n') for l in open(genes_path)]
+
+if running_cgi:
+    print("Content-Type: text/plain")
+    print()
+
 for g in gene_list:
-    print g
+    print(g)

@@ -1,15 +1,17 @@
-#!/usr/bin/env python
-import cgi
-import cgitb
-cgitb.enable()  # for troubleshooting
-print "Content-Type: text/html"
-print
-
+#!/usr/bin/env python3
 import os
 import pickle
 import numpy as np
 import subprocess
 import time
+
+from get_stdin_data import get_stdin_data
+
+data, running_cgi = get_stdin_data()
+
+if running_cgi:
+    print("Content-Type: text/html")
+    print()
 
 cwd = os.getcwd()
 if cwd.endswith('cgi-bin'):
@@ -18,13 +20,12 @@ if cwd.endswith('cgi-bin'):
 # CGI
 do_the_rest = True
 
-data = cgi.FieldStorage()
-base_dir = data.getvalue('base_dir')
-current_dir = data.getvalue('current_dir')
-extra_filter = data.getvalue('selected_cells')
-user_email = data.getvalue('email')
-selection_name = data.getvalue('selection_name')
-my_url_origin = data.getvalue('my_origin')
+base_dir = data.get_required_dir('base_dir')
+current_dir = data.get_required('current_dir')
+extra_filter = data.get('selected_cells')
+user_email = data.get('email')
+selection_name = data.get('selection_name')
+my_url_origin = data.get('my_origin')
 
 all_errors = []
 
@@ -50,7 +51,7 @@ if len(found_bad) > 0:
 	all_errors.append('Enter a <font color="red">cell subset name</font> without the following characters: <font face="courier">%s</font><br>' %('   '.join(found_bad)))
 
 try:
-	user_email = data.getvalue('email')
+	user_email = data.get('email')
 	if "@" not in user_email:
 		all_errors.append('Enter a valid <font color="red">email address</font>.<br>')
 		do_the_rest = False
@@ -59,14 +60,14 @@ except:
 
 if not do_the_rest:
 	#os.rmdir(new_dir)
-	print 'Invalid input!<br>'
+	print('Invalid input!<br>')
 	for err in all_errors:
-		print '>  %s' %err
+		print('>  %s' %err)
 else:
     try:
 
         rand_suffix = ''.join(str(time.time()).split('.'))
-        extra_filter = np.sort(np.array(map(int,extra_filter.split(','))))
+        extra_filter = np.sort(np.array(list(map(int,extra_filter.split(',')))))
 
 
         params_dict = {}
@@ -85,11 +86,11 @@ else:
         pickle.dump(params_dict, params_file, -1)
         params_file.close()
 
-        print 'Preparing data...<br>'
-        print 'This may take several minutes.<br>'
-        print 'You will be notified of completion by email.<br>'
-        print '<br>Feel free to close this window.<br>'
+        print('Preparing data...<br>')
+        print('This may take several minutes.<br>')
+        print('You will be notified of completion by email.<br>')
+        print('<br>Feel free to close this window.<br>')
 
         subprocess.call(["cgi-bin/download_expression.submit.sh", params_filename])
     except:
-        print 'Error starting processing!<br>'
+        print('Error starting processing!<br>')
