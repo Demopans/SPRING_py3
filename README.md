@@ -1,5 +1,7 @@
 # SPRING_py3
 
+This is an update of `AllonKleinLab/SPRING_dev` to use Python 3.
+
 ## Conda Environment and Installing Python libraries
 
 To run SPRING Viewer locally, you'll need to set up a conda environment for it and install its dependencies:
@@ -16,9 +18,9 @@ To run SPRING Viewer locally, you'll need to set up a conda environment for it a
 
 We recommend Anaconda (specifically Miniconda) to manage your Python libraries. You can download it here: https://conda.io/miniconda.html. 
 
-Create a Python 3 conda environment for SPRING viewer to run in. For example, to create a conda environment called `spring_viewer` with Python 3.12, you can open Terminal (Mac) or Anaconda Prompt (Windows) and enter:
+Create a Python 3 conda environment for SPRING viewer to run in. For example, to create a conda environment called `spring_viewer` with Python 3.9, you can open Terminal (Mac) or Anaconda Prompt (Windows) and enter:
 
-`conda create -n spring_viewer python=3.12`
+`conda create -n spring_viewer python=3.9`
 
 Activate your new conda environment by running:
 
@@ -32,18 +34,15 @@ Also run:
 
 `pip install annoy python-louvain`
 
-The `fa2` library has to be installed from modified source code. To do so, you'll create a folder with the source code by running these commands:
+### The ForceAtlas2 Library
 
+The forceatles `fa2` library is used for allowing dynamic interaction and layout of graphs in SPRING. In this Python3 upgrade, the fa2 library should be installed as per the package documentation using the following line:
 ```bash
-git clone https://github.com/bhargavchippada/forceatlas2
-cd forceatlas2
+pip install fa2
 ```
 
-You then need to modify the `setup.py` file in that folder as described in [this pull request](https://github.com/bhargavchippada/forceatlas2/pull/46). To do so, copy the contents of `fa2_patched_setup.py` from this folder to `setup.py` in the `forceatlas2` folder. Do not change the name of `setup.py`. Once you've copied over the changes, run the following command while in the `forceatlas2` folder:
+However at the time of this update, this line threw an error. SPRING_py3 can still be used for all other functions for interactive data exploration, using data xy coordinate layouts prepared in advance, e.g. using scanpy.
 
-```bash
-pip install . --user
-```
 
 ## Setting up a SPRING data directory
 See the example notebooks:  
@@ -53,6 +52,7 @@ See the example notebooks:
 [PBMCs from 10X Genomics](./data_prep/spring_notebook_10X.ipynb)
 
 A SPRING data set consist of a main directory and any number of subdirectories, with each subdirectory corresponding to one SPRING plot (i.e. subplot) that draws on a data matrix stored in the main directory. The main directory should have the following files, as well as one subdirectory for each SPRING plot. 
+
 
 `matrix.mtx`  
 `counts_norm_sparse_cells.hdf5`  
@@ -70,6 +70,8 @@ Each subdirectory should contain:
 `edges.csv`  
 `graph_data.json`  
 `run_info.json`  
+
+These files are generated in scanpy using [scanpy.external.exporting.spring_project](https://scanpy.readthedocs.io/en/stable/generated/scanpy.external.exporting.spring_project.html).
 
 ## Running SPRING Viewer
 
@@ -109,3 +111,11 @@ dat <- CID.writeJSON(celltypes, spring.dir = dir)
 ```
 
 Subsequently, the single cell data together with the cellular phenotypes (and Louvain clusters) can be visualized in SPRING Viewer (Signac writes the cell type and clustering information to the categorical_coloring_data.json file).
+
+
+## Summary of major changes from SPRING_dev to SPRING_py3
+* Updated syntax to python3
+* Uses `flask` for http server, instead of `cgi`
+* Removed old unused script directories
+* Added .gitignore file
+* In-progress (incomplete) update of code to allow running SPRING from any working directory
