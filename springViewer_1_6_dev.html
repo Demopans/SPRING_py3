@@ -10,6 +10,10 @@
 			<button>HELP!</button>
 		</div>
 		-->
+		<div id="file_sys">
+			<button id="file_dropdown_button">File</button>
+		</div>
+
 		<div id="layout_tools">
 			<button id="layout_dropdown_button">Layout</button>
 			<div id="layout_dropdown" class="dropdown-content">
@@ -77,6 +81,9 @@
 		<div id="extend_selection">
 			<button onclick="extend_selection()">Extend selection</button>
 		</div>
+		<div id="mark_selection">
+			<button onclick="mark_selection()">Mark selection</button>
+		</div>
 
 	</div>
 
@@ -101,29 +108,30 @@
 	<div id="colorpickerHolder"> </div>
 </div>
 
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/forceLayout_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/selection_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/colorbar_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/settings_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/coexpression_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/diffex_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/make_new_SPRINGplot_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/downloadSelectedExpr_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/clone_viewer.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/stickyNote.css">
+<div id="editor-fold">
+	<link href="scripts_1_6_dev/css/forceLayout_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/selection_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/colorbar_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/settings_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/coexpression_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/diffex_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/make_new_SPRINGplot_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/downloadSelectedExpr_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/clone_viewer.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/stickyNote.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" type="text/css" href="scripts_dev_shared/autocomplete_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/sweetalert.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/smoothing_imputation.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/doublet_detector.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/cluster2_style.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/selection_logic.css">
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/PAGA_viewer.css">
+	<link href="scripts_1_6_dev/css/sweetalert.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/smoothing_imputation.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/doublet_detector.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/cluster2_style.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/selection_logic.css" rel="stylesheet" type="text/css">
+	<link href="scripts_1_6_dev/css/PAGA_viewer.css" rel="stylesheet" type="text/css">
 <!-- <link rel="stylesheet" type="text/css" href="scripts_1_6_dev/stratify.css"> -->
 <!-- <link rel="stylesheet" type="text/css" href="scripts_1_6_dev/gridstack.css"> -->
 
-<script src="scripts_1_6_dev/jquery-3.1.0.min.js"></script>
-<script src="scripts_1_6_dev/d3.min.js"></script>
-<script src="scripts_1_6_dev/d3-queue.v3.min.js"></script> <!-- SPARSE UPDATE -->
+	<script src="scripts_1_6_dev/minLibs/jquery-3.1.0.min.js"></script>
+	<script src="scripts_1_6_dev/minLibs/d3.min.js"></script>
+	<script src="scripts_1_6_dev/minLibs/d3-queue.v3.min.js"></script> <!-- SPARSE UPDATE -->
 <script src="scripts_1_6_dev/colorBar.js"></script>
 <script src="scripts_1_6_dev/forceLayout_script.js"></script>
 <script src="scripts_1_6_dev/newSpringPlot.js"></script>
@@ -134,29 +142,29 @@
 <script src="scripts_1_6_dev/diffex_script.js"></script>
 <script src="scripts_1_6_dev/simg.js"></script>
 <script src="scripts_1_6_dev/jspdf.min.js" ></script>
-<script src="scripts_1_6_dev/canvg.min.js"></script>
+	<script src="scripts_1_6_dev/minLibs/canvg.min.js"></script>
 <script src="scripts_1_6_dev/FileSaver.js"></script>
-<script src="scripts_1_6_dev/spin.min.js"></script>
-<script src="scripts_1_6_dev/pixi.min.js"></script>
+	<script src="scripts_1_6_dev/minLibs/spin.min.js"></script>
+	<script src="scripts_1_6_dev/minLibs/pixi.min.js"></script>
 <script src="scripts_1_6_dev/make_new_SPRINGplot_script.js"></script>
 <script src="scripts_1_6_dev/LineSprite.js"></script>
 <script src="scripts_1_6_dev/clone_viewer.js"></script>
 <script src="scripts_1_6_dev/stickyNote.js"></script>
 <script src="scripts_1_6_dev/downloadSelectedExpr_script.js"></script>
 <script src="scripts_dev_shared/jquery.autocomplete.min.js"></script>
-<script src="scripts_1_6_dev/sweetalert.min.js"></script>
+	<script src="scripts_1_6_dev/minLibs/sweetalert.min.js"></script>
 <script src="scripts_1_6_dev/smoothing_imputation.js"></script>
 <script src="scripts_1_6_dev/doublet_detector.js"></script>
 <script src="scripts_1_6_dev/cluster2_script.js"></script>
 <script src="scripts_1_6_dev/selection_logic.js"></script>
 <script src="scripts_1_6_dev/PAGA_viewer.js"></script>
 
-<link rel="stylesheet" type="text/css" href="scripts_1_6_dev/colorpicker.css">
+	<link href="scripts_1_6_dev/css/colorpicker.css" rel="stylesheet" type="text/css">
 <script src="scripts_1_6_dev/colorpicker.js"></script>
 <script src="scripts_1_6_dev/colorpicker_eye.js"></script>
 <script src="scripts_1_6_dev/colorpicker_utils.js"></script>
 <script src="scripts_1_6_dev/colorpicker_layout.js"></script>
-
+</div>
 
 <script>
 

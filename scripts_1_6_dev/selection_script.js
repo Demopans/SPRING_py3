@@ -368,3 +368,6 @@ function extend_selection() {
 	}
 }
 
+function mark_selection(){
+
+}

@@ -5,7 +5,7 @@ function forceLayout(project_directory, sub_directory, callback) {
 		var snd = new Audio("scripts_1_6_dev/sound_effects/opennew_sound.wav"); snd.play(); }
 
 	graphData_filename = project_directory + '/' + sub_directory + "/graph_data.json";
-    coordinates_filename = graph_directory + '/' + sub_directory + '/coordinates.txt';
+	coordinates_filename = graph_directory + '/' + sub_directory + '/coordinates.txt';
     
 	d3.text(project_directory + '/' + sub_directory + '/mutability.txt', function(text) {
 		mutable = text;
@@ -96,103 +96,112 @@ function forceLayout(project_directory, sub_directory, callback) {
 
 	d3.select('#toggle_edges_layout').on('click',toggle_edges);
 
+	function LinkCheck(url) {
+		var http = new XMLHttpRequest();
+		http.open('HEAD', url, false);
+		http.send();
+		return http.status!=404;
+	}
+
 	// Read coordinates file if it exists
-	coordinates = []
-	d3.text(coordinates_filename, function(text) {
-		text.split('\n').forEach(function(entry,index,array) {
-			items = entry.split(',')
-			if (items.length > 1) {
-				xx = parseFloat($.trim(items[1]));
-				yy = parseFloat($.trim(items[2]));
-				nn = parseInt($.trim(items[0]));
-				coordinates.push([xx,yy])
-			}
-		});
+	if (LinkCheck(coordinates_filename)){
+		coordinates = []
+		d3.text(coordinates_filename, function(text) {
+			text.split('\n').forEach(function(entry,index,array) {
+				items = entry.split(',')
+				if (items.length > 1) {
+					xx = parseFloat($.trim(items[1]));
+					yy = parseFloat($.trim(items[2]));
+					nn = parseInt($.trim(items[0]));
+					coordinates.push([xx,yy])
+				}
+			});
 
-		app = new PIXI.Application(width,height, {backgroundColor: '0xdcdcdc'});
-		//app = new PIXI.Application(width,height, {backgroundColor: '0xb0b0b0'});
-		document.getElementById('pixi_canvas_holder').appendChild(app.view);
+			app = new PIXI.Application(width,height, {backgroundColor: '0xdcdcdc'});
+			//app = new PIXI.Application(width,height, {backgroundColor: '0xb0b0b0'});
+			document.getElementById('pixi_canvas_holder').appendChild(app.view);
 
-		sprites = new PIXI.Container(coordinates.length, {
-			scale: true,
-			position: true,
-			rotation: true,
-			uvs: true,
-			alpha: true
-		});
+			sprites = new PIXI.Container(coordinates.length, {
+				scale: true,
+				position: true,
+				rotation: true,
+				uvs: true,
+				alpha: true
+			});
 
 
-		// create an array to store all the sprites
-		all_nodes = [];
-		all_outlines = [];
-		var totalSprites = app.renderer instanceof PIXI.WebGLRenderer ? coordinates.length : 100;
-		base_colors = [];
-		var sprite_chooser = Math.random();
-		for (var i = 0; i < totalSprites; i++) {
-			var dude = PIXI.Sprite.fromImage('stuff/disc.png');
-			SPRITE_IMG_WIDTH = 32;
-			/*
-			if (sprite_chooser < 1/10) {
-				var dude = PIXI.Sprite.fromImage('stuff/mark.png')
-				SPRITE_IMG_WIDTH = 144;
-			} else if (sprite_chooser < 2/10) {
-				var dude = PIXI.Sprite.fromImage('stuff/leon.png')
-				SPRITE_IMG_WIDTH = 144;
-			} else if (sprite_chooser < 3/10) {
-				var dude = PIXI.Sprite.fromImage('stuff/james.png')
-				SPRITE_IMG_WIDTH = 144;
-			} else {
+			// create an array to store all the sprites
+			all_nodes = [];
+			all_outlines = [];
+			var totalSprites = app.renderer instanceof PIXI.WebGLRenderer ? coordinates.length : 100;
+			base_colors = [];
+			var sprite_chooser = Math.random();
+			for (var i = 0; i < totalSprites; i++) {
 				var dude = PIXI.Sprite.fromImage('stuff/disc.png');
 				SPRITE_IMG_WIDTH = 32;
+				/*
+        if (sprite_chooser < 1/10) {
+          var dude = PIXI.Sprite.fromImage('stuff/mark.png')
+          SPRITE_IMG_WIDTH = 144;
+        } else if (sprite_chooser < 2/10) {
+          var dude = PIXI.Sprite.fromImage('stuff/leon.png')
+          SPRITE_IMG_WIDTH = 144;
+        } else if (sprite_chooser < 3/10) {
+          var dude = PIXI.Sprite.fromImage('stuff/james.png')
+          SPRITE_IMG_WIDTH = 144;
+        } else {
+          var dude = PIXI.Sprite.fromImage('stuff/disc.png');
+          SPRITE_IMG_WIDTH = 32;
+        }
+        */
+
+				dude.anchor.set(.5);
+				dude.scale.set(.5 * 32 / SPRITE_IMG_WIDTH);
+				dude.x = coordinates[i][0];
+				dude.y = coordinates[i][1];
+				dude.tint = rgbToHex(0, 0, 0);
+				dude.alpha=1
+				dude.interactive = true;
+				dude.index = i;
+				dude.bump = 0;
+				dude.beingDragged = false;
+				sprites.addChild(dude);
+				all_nodes.push(dude);
+				base_colors.push({r:0,g:0,b:0});
+
+				outline = PIXI.Sprite.fromImage('stuff/annulus.png');
+				outline.anchor.set(.5);
+				outline.scale.set(.5);
+				outline.x = coordinates[i][0];
+				outline.y = coordinates[i][1];
+				outline.tint = '0xffff00';
+				outline.index = i;
+				outline.bump = .0001
+				outline.alpha = 0;
+				outline.selected = false;
+				outline.compared = false;
+				sprites.addChild(outline);
+				all_outlines.push(outline);
 			}
-			*/
-			
-			dude.anchor.set(.5);
-			dude.scale.set(.5 * 32 / SPRITE_IMG_WIDTH);
-			dude.x = coordinates[i][0];
-			dude.y = coordinates[i][1];
-			dude.tint = rgbToHex(0, 0, 0);
-			dude.alpha=1
-			dude.interactive = true;
-			dude.index = i;
-			dude.bump = 0;
-			dude.beingDragged = false;
-			sprites.addChild(dude);
-			all_nodes.push(dude);
-			base_colors.push({r:0,g:0,b:0});
 
-			outline = PIXI.Sprite.fromImage('stuff/annulus.png');
-			outline.anchor.set(.5);
-			outline.scale.set(.5);
-			outline.x = coordinates[i][0];
-			outline.y = coordinates[i][1];
-			outline.tint = '0xffff00';
-			outline.index = i;
-			outline.bump = .0001
-			outline.alpha = 0;
-			outline.selected = false;
-			outline.compared = false;
-			sprites.addChild(outline);
-			all_outlines.push(outline);
-		}
-		
-		stashed_coordinates = [{}];
-		for (i in all_nodes) {
-			stashed_coordinates[0][i] = [all_nodes[i].x, all_nodes[i].y];
-		}
+			stashed_coordinates = [{}];
+			for (i in all_nodes) {
+				stashed_coordinates[0][i] = [all_nodes[i].x, all_nodes[i].y];
+			}
 
 
-		svg_graph
-			.call(d3.behavior.drag()
-			.on("dragstart", dragstarted)
-			.on("drag", dragged)
-			.on("dragend", dragended));
-		
-		
-		loadColors();	
-		load_edges();
-		
-	});
+			svg_graph
+				.call(d3.behavior.drag()
+				.on("dragstart", dragstarted)
+				.on("drag", dragged)
+				.on("dragend", dragended));
+
+
+			loadColors();
+			load_edges();
+
+		});
+	}
 
 	function load_edges() {
 		edge_container = new PIXI.ParticleContainer(all_nodes.length * 20, {scale: true, position: true, rotation: true, uvs: true, alpha: true});
