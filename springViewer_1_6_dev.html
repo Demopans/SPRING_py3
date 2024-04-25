@@ -4,266 +4,267 @@
 <body>
 
 <div id="options_bar">
-	<div id="button_panel">
-		<!--
-		<div id="help">
-			<button>HELP!</button>
-		</div>
-		-->
-		<div id="file_sys">
-			<button id="file_dropdown_button">File</button>
-		</div>
+  <div id="button_panel">
+    <!--
+    <div id="help">
+      <button>HELP!</button>
+    </div>
+    -->
+    <div id="file_sys">
+      <button id="file_dropdown_button">File</button>
+    </div>
 
-		<div id="layout_tools">
-			<button id="layout_dropdown_button">Layout</button>
-			<div id="layout_dropdown" class="dropdown-content">
-				<a href="javascript:save_coords()">Save coordinates</a>
-				<a id="center_view">Center view</a>
-				<a href="javascript:rotation_update()">Rotate / scale</a>
-				<a id="revert_positions">Undo</a>
-				<a id="move_left">Move left</a>
-				<a id="move_right">Move right</a>
-				<a id="toggle_edges_layout">Hide edges</a>
-			</div>
-		</div>
+    <div id="layout_tools">
+      <button id="layout_dropdown_button">Layout</button>
+      <div class="dropdown-content" id="layout_dropdown">
+        <a href="javascript:save_coords()">Save coordinates</a>
+        <a id="center_view">Center view</a>
+        <a href="javascript:rotation_update()">Rotate / scale</a>
+        <a id="revert_positions">Undo</a>
+        <a id="move_left">Move left</a>
+        <a id="move_right">Move right</a>
+        <a id="toggle_edges_layout">Hide edges</a>
+      </div>
+    </div>
 
-		<div class="dropdown">
-		  <button id="download_dropdown_button">Download</button>
-		  <div id="download_dropdown" class="dropdown-content">
-			<a href="javascript:downloadCoordinates()">Coordinates</a>
-			<a href="javascript:downloadSelection()">Selected cells</a>
-			<a href="javascript:show_downloadSelectedExpr_popup()">SPRING data <br> for selection</a>
-			<a href="javascript:downloadEdges()">Edge list</a>
-			<a href="javascript:downloadRankedTerms()">Enriched terms</a>
-			<a href="javascript:downloadDoubletScores()">Doublet scores</a>
+    <div class="dropdown">
+      <button id="download_dropdown_button">Download</button>
+      <div class="dropdown-content" id="download_dropdown">
+        <a href="javascript:downloadCoordinates()">Coordinates</a>
+        <a href="javascript:downloadSelection()">Selected cells</a>
+        <a href="javascript:show_downloadSelectedExpr_popup()">SPRING data <br> for selection</a>
+        <a href="javascript:downloadEdges()">Edge list</a>
+        <a href="javascript:downloadRankedTerms()">Enriched terms</a>
+        <a href="javascript:downloadDoubletScores()">Doublet scores</a>
 
-			<a id="download_png">Screenshot</a>
-			<!-- <a href="javascript:downloadSVG()">Screenshot (.svg)</a> -->
-		  </div>
-		</div>
+        <a id="download_png">Screenshot</a>
+        <!-- <a href="javascript:downloadSVG()">Screenshot (.svg)</a> -->
+      </div>
+    </div>
 
-		<div class="dropdown">
-		 <button id="tools_dropdown_button">Tools</button>
-		  <div id="tools_dropdown" class="dropdown-content">
-		  	<a href="javascript:show_make_new_SPRINGplot_popup()">Make new subplot</a>
-			<a target="_blank" id="all_SPRINGplots_menu">All subplots menu</a>
-			<a href="javascript:start_clone_viewer()">Linkage broswer</a>
-			<!-- <a href="javascript:show_stickyNote_popup()">Sticky notes</a> -->
-			<a href="javascript:show_imputation_popup()">Smooth / Impute</a>
-			<a href="javascript:show_selection_logic_popup()">Selection logic</a>
-			<a href="javascript:show_doublet_popup()">Doublet detector</a>
-			<a href="javascript:run_clustering()">Louvain clustering</a>
-			<a href="javascript:show_PAGA_popup()">Graph abstraction</a>
-			<a href="javascript:toggle_legend_hover_tooltip()" id="toggle_legend_hover_tooltip_button">Show label tooltip</a>
-		  </div>
-		</div>
-		<div id="settings">
-			<button>Settings</button>
-		</div>
+    <div class="dropdown">
+      <button id="tools_dropdown_button">Tools</button>
+      <div class="dropdown-content" id="tools_dropdown">
+        <a href="javascript:show_make_new_SPRINGplot_popup()">Make new subplot</a>
+        <a id="all_SPRINGplots_menu" target="_blank">All subplots menu</a>
+        <a href="javascript:start_clone_viewer()">Linkage broswer</a>
+        <!-- <a href="javascript:show_stickyNote_popup()">Sticky notes</a> -->
+        <a href="javascript:show_imputation_popup()">Smooth / Impute</a>
+        <a href="javascript:show_selection_logic_popup()">Selection logic</a>
+        <a href="javascript:show_doublet_popup()">Doublet detector</a>
+        <a href="javascript:run_clustering()">Louvain clustering</a>
+        <a href="javascript:show_PAGA_popup()">Graph abstraction</a>
+        <a href="javascript:toggle_legend_hover_tooltip()" id="toggle_legend_hover_tooltip_button">Show label
+          tooltip</a>
+      </div>
+    </div>
+    <div id="settings">
+      <button>Settings</button>
+    </div>
 
 
-		<div id="sound_toggle"> </div>
-	</div>
-	<div id="color_chooser"> </div>
-	<div id="fast_buttons_box"> 
-		<div id="deselect">
-			<button>(De)select All</button>
-		</div>
-		<div id="slider_select_button">
-			<button> Slider select</button>
-		</div>
-		<div id="quick_dark">
-			<button>Dark</button>
-		</div>
-		<div id="quick_light">
-			<button>Light</button>
-		</div>
-		<div id="extend_selection">
-			<button onclick="extend_selection()">Extend selection</button>
-		</div>
-		<div id="mark_selection">
-			<button onclick="mark_selection()">Mark selection</button>
-		</div>
+    <div id="sound_toggle"></div>
+  </div>
+  <div id="color_chooser"></div>
+  <div id="fast_buttons_box">
+    <div id="deselect">
+      <button>(De)select All</button>
+    </div>
+    <div id="slider_select_button">
+      <button> Slider select</button>
+    </div>
+    <div id="quick_dark">
+      <button>Dark</button>
+    </div>
+    <div id="quick_light">
+      <button>Light</button>
+    </div>
+    <div id="extend_selection">
+      <button onclick="extend_selection()">Extend selection</button>
+    </div>
+    <div id="mark_selection">
+      <button onclick="mark_selection()">Mark selection</button>
+    </div>
 
-	</div>
+  </div>
 
 
 </div>
 <div id="container">
-	<div id="pixi_canvas_holder"> </div>
-	<div id="force_layout"> </div>
-	<div id="termsheet" class="sidebar">
-		<div class="column" id="termcolumn"> </div>
-		<div class="column" id="scorecolumn" > </div>
-	</div>
-	<div id="legend" class="sidebar">
-		<div class="column" id="count_column"> </div>
-		<div class="column" id="label_column"> </div>
-	</div>
-	
+  <div id="pixi_canvas_holder"></div>
+  <div id="force_layout"></div>
+  <div class="sidebar" id="termsheet">
+    <div class="column" id="termcolumn"></div>
+    <div class="column" id="scorecolumn"></div>
+  </div>
+  <div class="sidebar" id="legend">
+    <div class="column" id="count_column"></div>
+    <div class="column" id="label_column"></div>
+  </div>
+
 </div>
 
 <div id="colorpicker_popup">
-	<div id="colorpicker_button_bar"> </div>
-	<div id="colorpickerHolder"> </div>
+  <div id="colorpicker_button_bar"></div>
+  <div id="colorpickerHolder"></div>
 </div>
 
+<div id="labels_menu"></div>
+
 <div id="editor-fold">
-	<link href="scripts_1_6_dev/css/forceLayout_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/selection_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/colorbar_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/settings_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/coexpression_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/diffex_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/make_new_SPRINGplot_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/downloadSelectedExpr_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/clone_viewer.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/stickyNote.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="scripts_dev_shared/autocomplete_style.css">
-	<link href="scripts_1_6_dev/css/sweetalert.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/smoothing_imputation.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/doublet_detector.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/cluster2_style.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/selection_logic.css" rel="stylesheet" type="text/css">
-	<link href="scripts_1_6_dev/css/PAGA_viewer.css" rel="stylesheet" type="text/css">
-<!-- <link rel="stylesheet" type="text/css" href="scripts_1_6_dev/stratify.css"> -->
-<!-- <link rel="stylesheet" type="text/css" href="scripts_1_6_dev/gridstack.css"> -->
+  <link href="scripts_1_6_dev/css/forceLayout_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/selection_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/colorbar_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/settings_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/coexpression_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/diffex_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/make_new_SPRINGplot_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/downloadSelectedExpr_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/clone_viewer.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/stickyNote.css" rel="stylesheet" type="text/css">
+  <link href="scripts_dev_shared/autocomplete_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/sweetalert.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/smoothing_imputation.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/doublet_detector.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/cluster2_style.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/selection_logic.css" rel="stylesheet" type="text/css">
+  <link href="scripts_1_6_dev/css/PAGA_viewer.css" rel="stylesheet" type="text/css">
+  <!-- <link rel="stylesheet" type="text/css" href="scripts_1_6_dev/stratify.css"> -->
+  <!-- <link rel="stylesheet" type="text/css" href="scripts_1_6_dev/gridstack.css"> -->
 
-	<script src="scripts_1_6_dev/minLibs/jquery-3.1.0.min.js"></script>
-	<script src="scripts_1_6_dev/minLibs/d3.min.js"></script>
-	<script src="scripts_1_6_dev/minLibs/d3-queue.v3.min.js"></script> <!-- SPARSE UPDATE -->
-<script src="scripts_1_6_dev/colorBar.js"></script>
-<script src="scripts_1_6_dev/forceLayout_script.js"></script>
-<script src="scripts_1_6_dev/newSpringPlot.js"></script>
-<script src="scripts_1_6_dev/rotation_script.js"></script>
-<script src="scripts_1_6_dev/selection_script.js"></script>
-<script src="scripts_1_6_dev/settings_script.js"></script>
-<script src="scripts_1_6_dev/coexpression_script.js"></script>
-<script src="scripts_1_6_dev/diffex_script.js"></script>
-<script src="scripts_1_6_dev/simg.js"></script>
-<script src="scripts_1_6_dev/jspdf.min.js" ></script>
-	<script src="scripts_1_6_dev/minLibs/canvg.min.js"></script>
-<script src="scripts_1_6_dev/FileSaver.js"></script>
-	<script src="scripts_1_6_dev/minLibs/spin.min.js"></script>
-	<script src="scripts_1_6_dev/minLibs/pixi.min.js"></script>
-<script src="scripts_1_6_dev/make_new_SPRINGplot_script.js"></script>
-<script src="scripts_1_6_dev/LineSprite.js"></script>
-<script src="scripts_1_6_dev/clone_viewer.js"></script>
-<script src="scripts_1_6_dev/stickyNote.js"></script>
-<script src="scripts_1_6_dev/downloadSelectedExpr_script.js"></script>
-<script src="scripts_dev_shared/jquery.autocomplete.min.js"></script>
-	<script src="scripts_1_6_dev/minLibs/sweetalert.min.js"></script>
-<script src="scripts_1_6_dev/smoothing_imputation.js"></script>
-<script src="scripts_1_6_dev/doublet_detector.js"></script>
-<script src="scripts_1_6_dev/cluster2_script.js"></script>
-<script src="scripts_1_6_dev/selection_logic.js"></script>
-<script src="scripts_1_6_dev/PAGA_viewer.js"></script>
+  <script src="scripts_1_6_dev/minLibs/jquery-3.1.0.min.js"></script>
+  <script src="scripts_1_6_dev/minLibs/d3.min.js"></script>
+  <script src="scripts_1_6_dev/minLibs/d3-queue.v3.min.js"></script> <!-- SPARSE UPDATE -->
+  <script src="scripts_1_6_dev/colorBar.js"></script>
+  <script src="scripts_1_6_dev/forceLayout_script.js"></script>
+  <script src="scripts_1_6_dev/newSpringPlot.js"></script>
+  <script src="scripts_1_6_dev/rotation_script.js"></script>
+  <script src="scripts_1_6_dev/selection_script.js"></script>
+  <script src="scripts_1_6_dev/settings_script.js"></script>
+  <script src="scripts_1_6_dev/coexpression_script.js"></script>
+  <script src="scripts_1_6_dev/diffex_script.js"></script>
+  <script src="scripts_1_6_dev/simg.js"></script>
+  <script src="scripts_1_6_dev/jspdf.min.js"></script>
+  <script src="scripts_1_6_dev/minLibs/canvg.min.js"></script>
+  <script src="scripts_1_6_dev/FileSaver.js"></script>
+  <script src="scripts_1_6_dev/minLibs/spin.min.js"></script>
+  <script src="scripts_1_6_dev/minLibs/pixi.min.js"></script>
+  <script src="scripts_1_6_dev/make_new_SPRINGplot_script.js"></script>
+  <script src="scripts_1_6_dev/LineSprite.js"></script>
+  <script src="scripts_1_6_dev/clone_viewer.js"></script>
+  <script src="scripts_1_6_dev/stickyNote.js"></script>
+  <script src="scripts_1_6_dev/downloadSelectedExpr_script.js"></script>
+  <script src="scripts_dev_shared/jquery.autocomplete.min.js"></script>
+  <script src="scripts_1_6_dev/minLibs/sweetalert.min.js"></script>
+  <script src="scripts_1_6_dev/smoothing_imputation.js"></script>
+  <script src="scripts_1_6_dev/doublet_detector.js"></script>
+  <script src="scripts_1_6_dev/cluster2_script.js"></script>
+  <script src="scripts_1_6_dev/selection_logic.js"></script>
+  <script src="scripts_1_6_dev/PAGA_viewer.js"></script>
 
-	<link href="scripts_1_6_dev/css/colorpicker.css" rel="stylesheet" type="text/css">
-<script src="scripts_1_6_dev/colorpicker.js"></script>
-<script src="scripts_1_6_dev/colorpicker_eye.js"></script>
-<script src="scripts_1_6_dev/colorpicker_utils.js"></script>
-<script src="scripts_1_6_dev/colorpicker_layout.js"></script>
+  <link href="scripts_1_6_dev/css/colorpicker.css" rel="stylesheet" type="text/css">
+  <script src="scripts_1_6_dev/colorpicker.js"></script>
+  <script src="scripts_1_6_dev/colorpicker_eye.js"></script>
+  <script src="scripts_1_6_dev/colorpicker_utils.js"></script>
+  <script src="scripts_1_6_dev/colorpicker_layout.js"></script>
 </div>
 
 <script>
 
-var rotator_radius = null;
+  var rotator_radius = null;
 
-setup_download_dropdown();
-setup_tools_dropdown();
+  setup_download_dropdown();
+  setup_tools_dropdown();
 
-d3.select("#sound_toggle").append('img')
-	.attr('src', "scripts_1_6_dev/sound_effects/icon_mute.svg")
-	.on("click", function() {
-		if (d3.select("#sound_toggle").select("img").attr("src") == "scripts_1_6_dev/sound_effects/icon_speaker.svg") {
-			d3.select("#sound_toggle").select("img").attr("src","scripts_1_6_dev/sound_effects/icon_mute.svg"); }
-		else { d3.select("#sound_toggle").select("img").attr("src","scripts_1_6_dev/sound_effects/icon_speaker.svg"); } });
-
-
-
-function callback() {
-	center_view(false);
-	sprites.visible = false;
-	edge_container.visible = false;
-	animation();
-
-	settings_setup();
-	selection_setup();
-	setup_layout_dropdown();
-	initiateButtons();
-	make_new_SPRINGplot_setup();
-	downloadSelectedExpr_setup();
-	clone_viewer_setup();
-	stickyNote_setup();
-	imputation_setup();
-	doublet_setup();
-	cluster_setup();
-
-	selection_logic_setup();
-	colorpicker_setup();
-	PAGA_setup();
-	
-	//start_clone_viewer();
-	//show_imputation_popup();
-	//show_colorpicker_popup('HSC_HSC_fate1');
-	
-	window.onclick = function(event) {
-		if (!(event.target.matches('#settings_dropdown *'))) { collapse_settings(); }
-		if (!event.target.matches('#download_dropdown_button')) { closeDropdown(); }
-		if (!event.target.matches('#layout_dropdown_button')) { closeDropdown(); }
-	}
-
-	function click_edges_toggler() {
-		var edges_toggler = document.getElementById('toggle_edges_layout');
-		if (edges_toggler && typeof edges_toggler.click === 'function') {
-			edges_toggler.click();
-		}
-	}
-	setTimeout(click_edges_toggler, 450);
-}
-
-var name = window.location.search;
-var my_origin = window.location.origin;
-var my_pathname = window.location.pathname;
-var path_split = my_pathname.split("/")
-var path_start = path_split.slice(0, path_split.length-1).join("/")
-
-// the name might have the / encoded as %2F or %2f
-const possible_split_chars = ["/", "%2F", "%2f"];
-let split_char = "/";
-for (const possible_split_char of possible_split_chars) {
-	const char_index = name.search(possible_split_char);
-	if (char_index >= 0) {
-		split_char = possible_split_char;
-		break;
-	}
-}
-base_dir_name = name.slice(1,name.length).split(split_char);
-base_dir_name = base_dir_name.slice(0,base_dir_name.length-1).join("/");
-d3.select("#all_SPRINGplots_menu").attr("href", my_origin + path_start + "/currentDatasetsList.html?"+base_dir_name);
-
-var force_on = 1;
-var n_nodes = 0;
-var colors_loaded = 0;
-graph_directory = name.slice(1,name.length);
-var tmp = graph_directory.split(split_char);
-graph_directory = tmp.slice(0,tmp.length-1).join("/");
-sub_directory = tmp[tmp.length-1];
-
-document.title = tmp[tmp.length-1];
-
-clone_sprites = {};
-clone_edge_container = {};
-edge_container = [];
-
-d3.select("#force_layout").select("svg").remove()
-d3.select("#color_chooser").selectAll("div").remove()
-d3.select("#color_chooser").selectAll("input").remove()
-d3.select("#color_chooser").selectAll("select").remove()
-forceLayout(graph_directory, sub_directory, callback);
+  d3.select("#sound_toggle").append('img')
+    .attr('src', "scripts_1_6_dev/sound_effects/icon_mute.svg")
+    .on("click", function() {
+    if (d3.select("#sound_toggle").select("img").attr("src") == "scripts_1_6_dev/sound_effects/icon_speaker.svg") {
+      d3.select("#sound_toggle").select("img").attr("src","scripts_1_6_dev/sound_effects/icon_mute.svg"); }
+    else { d3.select("#sound_toggle").select("img").attr("src","scripts_1_6_dev/sound_effects/icon_speaker.svg"); } });
 
 
+
+  function callback() {
+    center_view(false);
+    sprites.visible = false;
+    edge_container.visible = false;
+    animation();
+
+    settings_setup();
+    selection_setup();
+    setup_layout_dropdown();
+    initiateButtons();
+    make_new_SPRINGplot_setup();
+    downloadSelectedExpr_setup();
+    clone_viewer_setup();
+    stickyNote_setup();
+    imputation_setup();
+    doublet_setup();
+    cluster_setup();
+
+    selection_logic_setup();
+    colorpicker_setup();
+    PAGA_setup();
+
+    //start_clone_viewer();
+    //show_imputation_popup();
+    //show_colorpicker_popup('HSC_HSC_fate1');
+
+    window.onclick = function(event) {
+      if (!(event.target.matches('#settings_dropdown *'))) { collapse_settings(); }
+      if (!event.target.matches('#download_dropdown_button')) { closeDropdown(); }
+      if (!event.target.matches('#layout_dropdown_button')) { closeDropdown(); }
+    }
+
+    function click_edges_toggler() {
+      var edges_toggler = document.getElementById('toggle_edges_layout');
+      if (edges_toggler && typeof edges_toggler.click === 'function') {
+        edges_toggler.click();
+      }
+    }
+    setTimeout(click_edges_toggler, 450);
+  }
+
+  var name = window.location.search;
+  var my_origin = window.location.origin;
+  var my_pathname = window.location.pathname;
+  var path_split = my_pathname.split("/")
+  var path_start = path_split.slice(0, path_split.length-1).join("/")
+
+  // the name might have the / encoded as %2F or %2f
+  const possible_split_chars = ["/", "%2F", "%2f"];
+  let split_char = "/";
+  for (const possible_split_char of possible_split_chars) {
+    const char_index = name.search(possible_split_char);
+    if (char_index >= 0) {
+      split_char = possible_split_char;
+      break;
+    }
+  }
+  base_dir_name = name.slice(1,name.length).split(split_char);
+  base_dir_name = base_dir_name.slice(0,base_dir_name.length-1).join("/");
+  d3.select("#all_SPRINGplots_menu").attr("href", my_origin + path_start + "/currentDatasetsList.html?"+base_dir_name);
+
+  var force_on = 1;
+  var n_nodes = 0;
+  var colors_loaded = 0;
+  graph_directory = name.slice(1,name.length);
+  var tmp = graph_directory.split(split_char);
+  graph_directory = tmp.slice(0,tmp.length-1).join("/");
+  sub_directory = tmp[tmp.length-1];
+
+  document.title = tmp[tmp.length-1];
+
+  clone_sprites = {};
+  clone_edge_container = {};
+  edge_container = [];
+
+  d3.select("#force_layout").select("svg").remove()
+  d3.select("#color_chooser").selectAll("div").remove()
+  d3.select("#color_chooser").selectAll("input").remove()
+  d3.select("#color_chooser").selectAll("select").remove()
+  forceLayout(graph_directory, sub_directory, callback);
 
 
 </script>
