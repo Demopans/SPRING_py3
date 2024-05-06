@@ -1,0 +1,4 @@
+{
+    "backend.maxHeapSizeMb": 1487,
+    "toolchains": ["source ../env/spring/bin/activate"]
+}

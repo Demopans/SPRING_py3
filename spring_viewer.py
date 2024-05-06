@@ -59,5 +59,5 @@ def open_plot_from_directory(path: str):
 
 if __name__ == '__main__':
     open_plot_from_directory(
-        "data/organoids/adata_36h_perturb_processed_09282020/all_cells"
+        "datasets/XA23_s10/PGCs"
     )

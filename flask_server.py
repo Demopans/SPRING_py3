@@ -14,6 +14,10 @@ DEFAULT_PORT = 8000
 parser.add_argument('-p', '--port', type=int, default=DEFAULT_PORT,
                     help='set the port for the server')
 
+HOST = "localhost"
+parser.add_argument('-m', '--host', type=str, default=HOST,
+                    help='sets ip address of server')
+
 args = parser.parse_args()
 
 app = Flask(__name__)
@@ -83,9 +87,9 @@ def run_script(script_name):
         abort(500, description=e.stderr)
 
 
-def run_server(port: int = DEFAULT_PORT, debug: bool = False):
-    app.run(port=port, debug=debug)
+def run_server(port: int = DEFAULT_PORT, debug: bool = False, host: str = "localhost"):
+    app.run(port=port, debug=debug, host=host)
 
 
 if __name__ == '__main__':
-    run_server(port=args.port, debug=args.debug)
+    run_server(port=args.port, debug=args.debug, host=args.host)

@@ -20,6 +20,7 @@ function print_help() {
 command="python3 flask_server.py"
 debug_mode=""
 port=""
+host=""
 
 while [[ $# -gt 0 ]]
 do
@@ -39,12 +40,17 @@ do
             print_help
             exit 0
             ;;
+        -m|--host)
+            host=" --host $2"
+            shift
+            shift
+            ;;
         *)
             # unknown option
             ;;
     esac
 done
 
-command="$command$debug_mode$port"
+command="$command$debug_mode$port$host"
 echo "Running command: $command"
 eval $command
