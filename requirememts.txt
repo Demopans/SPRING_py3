@@ -1,0 +1,9 @@
+#built against py 3.10, should work with py 3.11
+numpy
+scipy
+matplotlib
+h5py
+flask
+networkx
+scikit-learn
+fa2-modified

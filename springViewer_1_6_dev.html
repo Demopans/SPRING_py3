@@ -263,7 +263,7 @@
   d3.select("#color_chooser").selectAll("input").remove()
   d3.select("#color_chooser").selectAll("select").remove()
   forceLayout(graph_directory, sub_directory, callback);
-
+  for(var b in window) {    if(window.hasOwnProperty(b)) console.log(b+" = "+window[b]);  }
 
 </script>
 
