@@ -4,19 +4,15 @@ import subprocess
 
 from flask import Flask, request, abort, send_from_directory
 
-parser = argparse.ArgumentParser(
-    description='Start Flask server with optional debugging and port specification.')
+parser = argparse.ArgumentParser(description='Start Flask server with optional debugging and port specification.')
 
-parser.add_argument('-d', '--debug', action='store_true',
-                    help='run the server in debug mode')
+parser.add_argument('-d', '--debug', action='store_true', help='run the server in debug mode')
 
 DEFAULT_PORT = 8000
-parser.add_argument('-p', '--port', type=int, default=DEFAULT_PORT,
-                    help='set the port for the server')
+parser.add_argument('-p', '--port', type=int, default=DEFAULT_PORT, help='set the port for the server')
 
 HOST = "localhost"
-parser.add_argument('-m', '--host', type=str, default=HOST,
-                    help='sets ip address of server')
+parser.add_argument('-m', '--host', type=str, default=HOST, help='sets ip address of server')
 
 args = parser.parse_args()
 

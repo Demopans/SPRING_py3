@@ -8,3 +8,4 @@ networkx
 scikit-learn
 fa2-modified
 flask
+pandas
