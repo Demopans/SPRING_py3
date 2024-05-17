@@ -1,14 +1,31 @@
-import sys, json, pandas as pd, pathlib
+import json, pandas as pd, os
+from pathlib import Path
 
+ROOTDIR = 'datasets'
 
-def loadDataset(dir: str, option: str) -> pd.DataFrame:
+def getDataset(dataset: str, opt: str) -> dict:
     """
-    Loads dataset root directory. returns empty pd.Dataframe if directory is invalid
+    Loads dataset root directory. returns error dict if directory is invalid
+    Returns dict of loadable references otherwise
     """
-    root, option = pathlib.Path(dir), pathlib.Path(option)
-    if root not in option.parent:
-        return pd.DataFrame()
+    root, option = Path(f'{ROOTDIR}/{dataset}'), Path(f'{ROOTDIR}/{dataset}/{opt}')
+    if option.parent != root:
+        # possible it exists in cache, but if it's deleted from the dataset root, we probably don't need it
+        return {'error': 'Invalid directory'}
+
+    # check if exists in cache
+    # later
     
     # load raw cell data and pred labels (if any)
-    cellLabels = open(f'{dir}/cell_labels.txt')
+    dataset: bool
+    genes: bool
+    lbl: bool
+    filt: bool
+    data = {
+        'cellLabels':"",
+    }
+
+def loadDataset(ref: dict):
+    # loads dataset using reference dict, only for internal use as work is intended to be offloaded to the client
+    pass
     

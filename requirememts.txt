@@ -9,3 +9,4 @@ scikit-learn
 fa2-modified
 flask
 pandas
+modin # used serverside
