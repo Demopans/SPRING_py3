@@ -5,7 +5,7 @@ from pathlib import Path
 sys.path.append("../cgi-bin")
 sys.path.append("../cgi-bin/lib")
 from dotdot import DotDot
-from file import loadDataset
+from file import getDataset,loadDataset
 
 if __name__ == '__main__':
     # set working directory
