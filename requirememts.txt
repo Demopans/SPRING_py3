@@ -10,3 +10,4 @@ fa2-modified
 flask
 pandas
 modin # used serverside
+scanpy

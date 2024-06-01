@@ -107,6 +107,7 @@ def load_mtx(file_data):
     return scipy.io.mmread(file_data).tocsc()
 
 def load_npz(file_data):
+    from scipy.sparse import load_npz
     return scipy.sparse.load_npz(file_data).tocsc()
 
 def load_npy(file_data):
