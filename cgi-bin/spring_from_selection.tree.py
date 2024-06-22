@@ -107,11 +107,11 @@ except:
 
 try:
     num_fa2_iter = int(data.get('nIter'))
-    if num_fa2_iter < 1:
-        all_errors.append('Enter an integer >0 for <font color="red">number of force layout iterations</font>.<br>')
+    if num_fa2_iter < 0:
+        all_errors.append('Enter an integer >=0 for <font color="red">number of force layout iterations</font>.<br>')
         do_the_rest = False
 except:
-    all_errors.append('Enter an integer >0 for <font color="red">number of force layout iterations</font>.<br>')
+    all_errors.append('Enter an integer >=0 for <font color="red">number of force layout iterations</font>.<br>')
     do_the_rest = False
 
 try:
@@ -130,7 +130,6 @@ if not do_the_rest:
     print('Invalid input!<br>')
     for err in all_errors:
         print('>  %s' %err)
-
 else:
     try:
         

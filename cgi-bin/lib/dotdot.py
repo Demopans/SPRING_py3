@@ -1,6 +1,8 @@
 import pandas as pd
 
-# implements data scructure as proposed https://www.biorxiv.org/content/10.1101/2024.01.02.573882v1
+"""
+implements data scructure as proposed https://www.biorxiv.org/content/10.1101/2024.01.02.573882v1
+"""
 
 class DotDot:
     data: pd.DataFrame
@@ -19,3 +21,8 @@ class DotDot:
         pass
     pass
 
+    def toAnnData(self):
+        pass
+
+    def write(self,file: str):
+        pass
