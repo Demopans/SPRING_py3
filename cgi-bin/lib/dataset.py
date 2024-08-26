@@ -48,8 +48,9 @@ def loadDataset(dataset: str, opt: str):
         pass
     ref: dict[str, str | Path] = getDataset(dataset, opt)
 
-    # create Annotated dataset
-    data = AnnData(
+    # AnnData can take pandas dataframes
+
+    """data = AnnData(
         X=load_npz(ref['data']).tocsc(),
         var=np.loadtxt(ref['genes'], dtype=str, delimiter='\t', comments=None)
     )
@@ -61,7 +62,8 @@ def loadDataset(dataset: str, opt: str):
     s = s[filter.T.values[0]]
 
     d = pd.read_csv(ref['lbl'],header=0, index_col=0)
-    d = d.iloc[:,filter.T.values[0]]
+    d = d.iloc[:,filter.T.values[0]]"""
 
     #data.layers['expr'] = s
-    scanpy.pl.dotplot
+    dot = scanpy.pl.dotplot
+    
