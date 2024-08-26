@@ -55,13 +55,13 @@ def loadDataset(dataset: str, opt: str):
     )
     filter = pd.read_csv(ref['opt'])
 
-    s = load_npz(ref['expr'])
-    d = pd.read_csv(ref['lbl'],header=0, index_col=0)
-
-    # filter then stitch
     data = data[filter.values]
+
+    s = load_npz(ref['expr'])
     s = s[filter.T.values[0]]
+
+    d = pd.read_csv(ref['lbl'],header=0, index_col=0)
     d = d.iloc[:,filter.T.values[0]]
 
-
+    #data.layers['expr'] = s
     scanpy.pl.dotplot
