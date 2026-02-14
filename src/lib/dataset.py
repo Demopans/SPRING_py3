@@ -50,20 +50,24 @@ def loadDataset(dataset: str, opt: str):
 
     # AnnData can take pandas dataframes
 
-    """data = AnnData(
-        X=load_npz(ref['data']).tocsc(),
-        var=np.loadtxt(ref['genes'], dtype=str, delimiter='\t', comments=None)
-    )
+    data = load_npz(ref['data']).tocsc()
+
+    var = np.loadtxt(ref['genes'], dtype=str, delimiter='\t', comments=None)
+    # reformat var
+    var = map( lambda itm: itm.replace(' ', '').split('|'),var)
+    var = list(var)
+    var = pd.DataFrame(var).T
+
     filter = pd.read_csv(ref['opt'])
 
-    data = data[filter.values]
-
+    data = data[filter.values.T[0],:]
     s = load_npz(ref['expr'])
     s = s[filter.T.values[0]]
 
     d = pd.read_csv(ref['lbl'],header=0, index_col=0)
-    d = d.iloc[:,filter.T.values[0]]"""
+    d = d.iloc[:,filter.T.values[0]]
 
     #data.layers['expr'] = s
     dot = scanpy.pl.dotplot
-    
+
+

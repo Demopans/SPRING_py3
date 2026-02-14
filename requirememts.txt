@@ -6,7 +6,7 @@ h5py
 flask
 networkx
 scikit-learn
-fa2-modified
+#fa2-modified
 flask
 pandas
 modin # used serverside
