@@ -11,3 +11,4 @@ if __name__ == '__main__':
     # check output
     a = loadDataset('XA23_s10','PGCs')
     a
+    # check dot plot

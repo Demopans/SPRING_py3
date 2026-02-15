@@ -65,12 +65,11 @@ def loadDataset(dataset: str, opt: str):
     d = pd.read_csv(ref['lbl'],header=0, index_col=0)
     d = d.iloc[:,filter.T.values[0]].T
 
-    #data.layers['expr'] = s
-    dot = scanpy.pl.dotplot
+    # construct AnnDataframe
     out: sp.AnnData
     out = sp.AnnData(data)
-    out.obs_names = filter
-    out.var_names = var[2]
-    # construct AnnDataframe
-
+    out.obs_names = d.index
+    out.var_names = var.loc[2]
+    out.layers['expression'] = s
+    return out
 
