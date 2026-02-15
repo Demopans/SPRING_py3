@@ -40,8 +40,7 @@ def loadDataset(dataset: str, opt: str):
     """
     Loads dataset, hits cache first if possible
     """
-    import scanpy, pandas as pd, sys, numpy as np
-    from scanpy import AnnData
+    import scanpy as sp, pandas as pd, sys, numpy as np, scanpy
     from scipy.sparse import csr_matrix, load_npz
     # in cache? Guarrented to be valid if it is the case
     if Path(f'cache/{dataset}/{opt}.adata').is_file():
@@ -49,25 +48,29 @@ def loadDataset(dataset: str, opt: str):
     ref: dict[str, str | Path] = getDataset(dataset, opt)
 
     # AnnData can take pandas dataframes
-
-    data = load_npz(ref['data']).tocsc()
-
-    var = np.loadtxt(ref['genes'], dtype=str, delimiter='\t', comments=None)
-    # reformat var
-    var = map( lambda itm: itm.replace(' ', '').split('|'),var)
-    var = list(var)
-    var = pd.DataFrame(var).T
-
     filter = pd.read_csv(ref['opt'])
 
+    data = load_npz(ref['data']).tocsc()
     data = data[filter.values.T[0],:]
+
+    # gene data
+    var = np.loadtxt(ref['genes'], dtype=str, delimiter='\t', comments=None)
+    # reformat var
+    var = list(map( lambda itm: itm.replace(' ', '').split('|'),var))
+    var = pd.DataFrame(var).T
+
     s = load_npz(ref['expr'])
     s = s[filter.T.values[0]]
 
     d = pd.read_csv(ref['lbl'],header=0, index_col=0)
-    d = d.iloc[:,filter.T.values[0]]
+    d = d.iloc[:,filter.T.values[0]].T
 
     #data.layers['expr'] = s
     dot = scanpy.pl.dotplot
+    out: sp.AnnData
+    out = sp.AnnData(data)
+    out.obs_names = filter
+    out.var_names = var[2]
+    # construct AnnDataframe
 
 
